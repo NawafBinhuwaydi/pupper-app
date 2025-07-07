@@ -6,10 +6,12 @@ from aws_cdk import (
     aws_s3 as s3,
     aws_iam as iam,
     aws_s3_notifications as s3n,
+    aws_cognito as cognito,
     RemovalPolicy,
     Duration,
     Aspects,
     Size,
+    CfnOutput,
 )
 from constructs import Construct
 # from cdk_nag import AwsSolutionsChecks, NagSuppressions
@@ -67,19 +69,120 @@ class PupperCdkStack(Stack):
         )
 
         # Suppress CDK Nag findings for S3 bucket
-        NagSuppressions.add_resource_suppressions(
-            self.images_bucket,
-            [
+        # NagSuppressions.add_resource_suppressions(
+        #     self.images_bucket,
+        #     [
+        #         {
+        #             "id": "AwsSolutions-S1",
+        #             "reason": "Access logging is configured with prefix",
+        #         },
+        #         {
+        #             "id": "AwsSolutions-S2",
+        #             "reason": "Bucket is for internal application use only",
+        #         },
+        #         {"id": "AwsSolutions-S10", "reason": "SSL enforcement is enabled"},
+        #     ],
+        # )
+
+        # Cognito User Pool for authentication
+        self.user_pool = cognito.UserPool(
+            self,
+            "PupperUserPool",
+            user_pool_name="pupper-user-pool",
+            self_sign_up_enabled=True,
+            sign_in_aliases=cognito.SignInAliases(
+                username=True,
+                email=True
+            ),
+            auto_verify=cognito.AutoVerifiedAttrs(email=True),
+            standard_attributes=cognito.StandardAttributes(
+                email=cognito.StandardAttribute(
+                    required=True,
+                    mutable=True
+                ),
+                preferred_username=cognito.StandardAttribute(
+                    required=False,
+                    mutable=True
+                )
+            ),
+            password_policy=cognito.PasswordPolicy(
+                min_length=6,
+                require_lowercase=True,
+                require_uppercase=True,
+                require_digits=True,
+                require_symbols=False
+            ),
+            account_recovery=cognito.AccountRecovery.EMAIL_ONLY,
+            removal_policy=RemovalPolicy.DESTROY
+        )
+
+        # Cognito User Pool Client
+        self.user_pool_client = cognito.UserPoolClient(
+            self,
+            "PupperUserPoolClient",
+            user_pool=self.user_pool,
+            user_pool_client_name="pupper-web-client",
+            generate_secret=False,  # For web applications
+            auth_flows=cognito.AuthFlow(
+                user_password=True,
+                user_srp=True,
+                admin_user_password=True
+            ),
+            o_auth=cognito.OAuthSettings(
+                flows=cognito.OAuthFlows(
+                    authorization_code_grant=True,
+                    implicit_code_grant=True
+                ),
+                scopes=[
+                    cognito.OAuthScope.EMAIL,
+                    cognito.OAuthScope.OPENID,
+                    cognito.OAuthScope.PROFILE
+                ],
+                callback_urls=["http://localhost:3000", "https://localhost:3000"]
+            ),
+            prevent_user_existence_errors=True
+        )
+
+        # Identity Pool for AWS resource access
+        self.identity_pool = cognito.CfnIdentityPool(
+            self,
+            "PupperIdentityPool",
+            identity_pool_name="pupper_identity_pool",
+            allow_unauthenticated_identities=False,
+            cognito_identity_providers=[
+                cognito.CfnIdentityPool.CognitoIdentityProviderProperty(
+                    client_id=self.user_pool_client.user_pool_client_id,
+                    provider_name=self.user_pool.user_pool_provider_name
+                )
+            ]
+        )
+
+        # IAM roles for authenticated users
+        self.authenticated_role = iam.Role(
+            self,
+            "CognitoAuthenticatedRole",
+            assumed_by=iam.FederatedPrincipal(
+                "cognito-identity.amazonaws.com",
                 {
-                    "id": "AwsSolutions-S1",
-                    "reason": "Access logging is configured with prefix",
+                    "StringEquals": {
+                        "cognito-identity.amazonaws.com:aud": self.identity_pool.ref
+                    },
+                    "ForAnyValue:StringLike": {
+                        "cognito-identity.amazonaws.com:amr": "authenticated"
+                    }
                 },
-                {
-                    "id": "AwsSolutions-S2",
-                    "reason": "Bucket is for internal application use only",
-                },
-                {"id": "AwsSolutions-S10", "reason": "SSL enforcement is enabled"},
-            ],
+                "sts:AssumeRoleWithWebIdentity"
+            )
+        )
+
+        # Attach identity pool roles
+        cognito.CfnIdentityPoolRoleAttachment(
+            self,
+            "IdentityPoolRoleAttachment",
+            identity_pool_id=self.identity_pool.ref,
+            roles={
+                "authenticated": self.authenticated_role.role_arn
+            }
         )
 
         # DynamoDB Tables
@@ -279,7 +382,7 @@ class PupperCdkStack(Stack):
         )
 
         # Suppress CDK Nag findings for Lambda role
-        NagSuppressions.add_resource_suppressions(
+        # NagSuppressions.add_resource_suppressions(
             lambda_role,
             [
                 {
@@ -494,7 +597,7 @@ class PupperCdkStack(Stack):
         )
 
         # Suppress CDK Nag findings for API Gateway
-        NagSuppressions.add_resource_suppressions(
+        # NagSuppressions.add_resource_suppressions(
             self.api,
             [
                 {
@@ -570,4 +673,33 @@ class PupperCdkStack(Stack):
         image_resource = images_resource.add_resource("{image_id}")
         image_resource.add_method(
             "GET", apigateway.LambdaIntegration(self.image_upload_lambda)
+        )
+
+        # CDK Outputs for frontend configuration
+        CfnOutput(
+            self,
+            "UserPoolId",
+            value=self.user_pool.user_pool_id,
+            description="Cognito User Pool ID"
+        )
+
+        CfnOutput(
+            self,
+            "UserPoolClientId", 
+            value=self.user_pool_client.user_pool_client_id,
+            description="Cognito User Pool Client ID"
+        )
+
+        CfnOutput(
+            self,
+            "IdentityPoolId",
+            value=self.identity_pool.ref,
+            description="Cognito Identity Pool ID"
+        )
+
+        CfnOutput(
+            self,
+            "Region",
+            value=self.region,
+            description="AWS Region"
         )

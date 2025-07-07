@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Heart, Search, Menu, X, Home, Plus } from 'lucide-react';
+import { Heart, Search, Menu, X, Home, Plus, User, LogOut } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { isAuthenticated, user, logout } = useAuth();
 
   const navigation = [
     { name: 'Home', href: '/', icon: Home },
@@ -19,6 +21,14 @@ const Header = () => {
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   return (
@@ -36,25 +46,51 @@ const Header = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
-            {navigation.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                    isActive(item.href)
-                      ? 'text-primary-600 bg-primary-50'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                  }`}
+          <div className="hidden md:flex items-center space-x-8">
+            <nav className="flex space-x-8">
+              {navigation.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                      isActive(item.href)
+                        ? 'text-primary-600 bg-primary-50'
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                    }`}
+                  >
+                    <Icon size={18} />
+                    <span>{item.name}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+            
+            {/* User Menu */}
+            {isAuthenticated ? (
+              <div className="flex items-center space-x-4">
+                <span className="text-sm text-gray-600">
+                  Welcome, {user?.username || 'User'}
+                </span>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center space-x-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-all duration-200"
                 >
-                  <Icon size={18} />
-                  <span>{item.name}</span>
-                </Link>
-              );
-            })}
-          </nav>
+                  <LogOut size={18} />
+                  <span>Logout</span>
+                </button>
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="flex items-center space-x-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg text-sm font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-105"
+              >
+                <User size={18} />
+                <span>Login</span>
+              </Link>
+            )}
+          </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden">
@@ -90,6 +126,31 @@ const Header = () => {
                   </Link>
                 );
               })}
+              
+              {/* Mobile User Menu */}
+              {isAuthenticated ? (
+                <div className="border-t border-gray-200 pt-4 mt-4">
+                  <div className="px-3 py-2 text-sm text-gray-600">
+                    Welcome, {user?.username || 'User'}
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center space-x-3 px-3 py-2 bg-gray-100 text-gray-700 rounded-md text-base font-medium hover:bg-gray-200 transition-all duration-200 w-full"
+                  >
+                    <LogOut size={20} />
+                    <span>Logout</span>
+                  </button>
+                </div>
+              ) : (
+                <Link
+                  to="/login"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center space-x-3 px-3 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-md text-base font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-200"
+                >
+                  <User size={20} />
+                  <span>Login</span>
+                </Link>
+              )}
             </nav>
           </div>
         )}

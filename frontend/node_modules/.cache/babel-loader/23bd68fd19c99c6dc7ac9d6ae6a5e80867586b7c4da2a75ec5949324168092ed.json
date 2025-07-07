@@ -1,0 +1,1 @@
+{"ast":null,"code":"import md5 from './md5.js';\nimport v35, { DNS, URL } from './v35.js';\nexport { DNS, URL } from './v35.js';\nfunction v3(value, namespace, buf, offset) {\n  return v35(0x30, md5, value, namespace, buf, offset);\n}\nv3.DNS = DNS;\nv3.URL = URL;\nexport default v3;","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

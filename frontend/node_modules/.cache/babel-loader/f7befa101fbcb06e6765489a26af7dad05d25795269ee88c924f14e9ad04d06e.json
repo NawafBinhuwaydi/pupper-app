@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { v4 } from 'uuid';\n\n// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.\n// SPDX-License-Identifier: Apache-2.0\nconst amplifyUuid = v4;\nexport { amplifyUuid };\n//# sourceMappingURL=index.mjs.map","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

@@ -1,28 +1,28 @@
 {
   "version": "34.0.0",
   "artifacts": {
-    "PupperCdkStack.assets": {
+    "PupperCognitoStack.assets": {
       "type": "cdk:asset-manifest",
       "properties": {
-        "file": "PupperCdkStack.assets.json",
+        "file": "PupperCognitoStack.assets.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
       }
     },
-    "PupperCdkStack": {
+    "PupperCognitoStack": {
       "type": "aws:cloudformation:stack",
       "environment": "aws://unknown-account/unknown-region",
       "properties": {
-        "templateFile": "PupperCdkStack.template.json",
+        "templateFile": "PupperCognitoStack.template.json",
         "terminationProtection": false,
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/6888e56cdd28a582eb213e1888c63caa77718597bb81cdf97907f60f948e7346.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/684a9dad16d0a501fabc6a1c8462243e80da98116e94550e1c6f7f3a831cf2ba.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
-          "PupperCdkStack.assets"
+          "PupperCognitoStack.assets"
         ],
         "lookupRole": {
           "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
@@ -31,447 +31,65 @@
         }
       },
       "dependencies": [
-        "PupperCdkStack.assets"
+        "PupperCognitoStack.assets"
       ],
       "metadata": {
-        "/PupperCdkStack/PupperImagesBucket/Resource": [
+        "/PupperCognitoStack/PupperUserPool/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "PupperImagesBucketD100108D"
+            "data": "PupperUserPoolC5BC1883"
           }
         ],
-        "/PupperCdkStack/PupperImagesBucket/Policy/Resource": [
+        "/PupperCognitoStack/PupperUserPoolClient/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "PupperImagesBucketPolicy2F8AE4CC"
+            "data": "PupperUserPoolClient3368A196"
           }
         ],
-        "/PupperCdkStack/PupperImagesBucket/AutoDeleteObjectsCustomResource/Default": [
+        "/PupperCognitoStack/UserPoolId": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "PupperImagesBucketAutoDeleteObjectsCustomResourceAC1F450C"
+            "data": "UserPoolId"
           }
         ],
-        "/PupperCdkStack/PupperImagesBucket/Notifications/Resource": [
+        "/PupperCognitoStack/UserPoolClientId": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "PupperImagesBucketNotifications13CFE64D"
+            "data": "UserPoolClientId"
           }
         ],
-        "/PupperCdkStack/PupperImagesBucket/AllowBucketNotificationsToPupperCdkStackImageProcessingFunction909283BC": [
+        "/PupperCognitoStack/Region": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "PupperImagesBucketAllowBucketNotificationsToPupperCdkStackImageProcessingFunction909283BC1740DDAB"
+            "data": "Region"
           }
         ],
-        "/PupperCdkStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
-          }
-        ],
-        "/PupperCdkStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F"
-          }
-        ],
-        "/PupperCdkStack/DogsTable": [
-          {
-            "type": "aws:cdk:hasPhysicalName",
-            "data": {
-              "Ref": "DogsTable78D17CEF"
-            }
-          }
-        ],
-        "/PupperCdkStack/DogsTable/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "DogsTable78D17CEF"
-          }
-        ],
-        "/PupperCdkStack/UsersTable": [
-          {
-            "type": "aws:cdk:hasPhysicalName",
-            "data": {
-              "Ref": "UsersTable9725E9C8"
-            }
-          }
-        ],
-        "/PupperCdkStack/UsersTable/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "UsersTable9725E9C8"
-          }
-        ],
-        "/PupperCdkStack/VotesTable": [
-          {
-            "type": "aws:cdk:hasPhysicalName",
-            "data": {
-              "Ref": "VotesTable39A917AC"
-            }
-          }
-        ],
-        "/PupperCdkStack/VotesTable/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "VotesTable39A917AC"
-          }
-        ],
-        "/PupperCdkStack/SheltersTable": [
-          {
-            "type": "aws:cdk:hasPhysicalName",
-            "data": {
-              "Ref": "SheltersTableA42E105E"
-            }
-          }
-        ],
-        "/PupperCdkStack/SheltersTable/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "SheltersTableA42E105E"
-          }
-        ],
-        "/PupperCdkStack/ImagesTable": [
-          {
-            "type": "aws:cdk:hasPhysicalName",
-            "data": {
-              "Ref": "ImagesTable39278AD9"
-            }
-          }
-        ],
-        "/PupperCdkStack/ImagesTable/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "ImagesTable39278AD9"
-          }
-        ],
-        "/PupperCdkStack/PupperLambdaRole/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperLambdaRole893178A8"
-          }
-        ],
-        "/PupperCdkStack/PupperLambdaRole/DefaultPolicy/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperLambdaRoleDefaultPolicy68E9E62F"
-          }
-        ],
-        "/PupperCdkStack/CreateDogFunction/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "CreateDogFunctionFED218F0"
-          }
-        ],
-        "/PupperCdkStack/ReadDogFunction/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "ReadDogFunction8641CD5D"
-          }
-        ],
-        "/PupperCdkStack/UpdateDogFunction/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "UpdateDogFunctionACC97248"
-          }
-        ],
-        "/PupperCdkStack/DeleteDogFunction/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "DeleteDogFunction87D16C98"
-          }
-        ],
-        "/PupperCdkStack/ImageUploadFunction/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "ImageUploadFunction1528BFB7"
-          }
-        ],
-        "/PupperCdkStack/ImageProcessingFunction/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "ImageProcessingFunction2728E0B4"
-          }
-        ],
-        "/PupperCdkStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC"
-          }
-        ],
-        "/PupperCdkStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/DefaultPolicy/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36"
-          }
-        ],
-        "/PupperCdkStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApiCF69E181"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Deployment/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApiDeployment714C7E7Cfed1f9a1a606fe38cc3754496fe9bd9b"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/DeploymentStage.prod/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApiDeploymentStageprod6CE535E3"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Endpoint": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApiEndpoint7D73B7FB"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/OPTIONS/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApiOPTIONS1AE22176"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogs5C027535"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/OPTIONS/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogsOPTIONS8C0BA6CE"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/POST/ApiPermission.PupperCdkStackPupperApiF6D14D0C.POST..dogs": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogsPOSTApiPermissionPupperCdkStackPupperApiF6D14D0CPOSTdogsBDADDBC0"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/POST/ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.POST..dogs": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogsPOSTApiPermissionTestPupperCdkStackPupperApiF6D14D0CPOSTdogsDC2AE85E"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/POST/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogsPOSTD2B177F5"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/GET/ApiPermission.PupperCdkStackPupperApiF6D14D0C.GET..dogs": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogsGETApiPermissionPupperCdkStackPupperApiF6D14D0CGETdogs2A4686CD"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/GET/ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.GET..dogs": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogsGETApiPermissionTestPupperCdkStackPupperApiF6D14D0CGETdogs643689CA"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/GET/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogsGET8CF63279"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/{dog_id}/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogsdogid43152FE7"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/{dog_id}/OPTIONS/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogsdogidOPTIONSA2567FFF"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/{dog_id}/GET/ApiPermission.PupperCdkStackPupperApiF6D14D0C.GET..dogs.{dog_id}": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogsdogidGETApiPermissionPupperCdkStackPupperApiF6D14D0CGETdogsdogid0F6F40D6"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/{dog_id}/GET/ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.GET..dogs.{dog_id}": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogsdogidGETApiPermissionTestPupperCdkStackPupperApiF6D14D0CGETdogsdogidA378E5A7"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/{dog_id}/GET/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogsdogidGETD720C812"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/{dog_id}/PUT/ApiPermission.PupperCdkStackPupperApiF6D14D0C.PUT..dogs.{dog_id}": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogsdogidPUTApiPermissionPupperCdkStackPupperApiF6D14D0CPUTdogsdogid18CA8FBD"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/{dog_id}/PUT/ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.PUT..dogs.{dog_id}": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogsdogidPUTApiPermissionTestPupperCdkStackPupperApiF6D14D0CPUTdogsdogidFBED9632"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/{dog_id}/PUT/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogsdogidPUTE457F455"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/{dog_id}/DELETE/ApiPermission.PupperCdkStackPupperApiF6D14D0C.DELETE..dogs.{dog_id}": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogsdogidDELETEApiPermissionPupperCdkStackPupperApiF6D14D0CDELETEdogsdogid9CA6B554"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/{dog_id}/DELETE/ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.DELETE..dogs.{dog_id}": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogsdogidDELETEApiPermissionTestPupperCdkStackPupperApiF6D14D0CDELETEdogsdogidA7F23D80"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/{dog_id}/DELETE/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogsdogidDELETE576F06E5"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/{dog_id}/vote/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogsdogidvoteC9D8C6C1"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/{dog_id}/vote/OPTIONS/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogsdogidvoteOPTIONS266DD892"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/{dog_id}/vote/POST/ApiPermission.PupperCdkStackPupperApiF6D14D0C.POST..dogs.{dog_id}.vote": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogsdogidvotePOSTApiPermissionPupperCdkStackPupperApiF6D14D0CPOSTdogsdogidvote202C1562"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/{dog_id}/vote/POST/ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.POST..dogs.{dog_id}.vote": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogsdogidvotePOSTApiPermissionTestPupperCdkStackPupperApiF6D14D0CPOSTdogsdogidvote04777872"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/dogs/{dog_id}/vote/POST/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApidogsdogidvotePOST30F901C9"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/images/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApiimages82FD10B9"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/images/OPTIONS/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApiimagesOPTIONS1C292AB9"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/images/POST/ApiPermission.PupperCdkStackPupperApiF6D14D0C.POST..images": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApiimagesPOSTApiPermissionPupperCdkStackPupperApiF6D14D0CPOSTimagesF157328E"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/images/POST/ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.POST..images": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApiimagesPOSTApiPermissionTestPupperCdkStackPupperApiF6D14D0CPOSTimages5128A38D"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/images/POST/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApiimagesPOSTBF806986"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/images/{image_id}/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApiimagesimageid333D910B"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/images/{image_id}/OPTIONS/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApiimagesimageidOPTIONS32803738"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/images/{image_id}/GET/ApiPermission.PupperCdkStackPupperApiF6D14D0C.GET..images.{image_id}": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApiimagesimageidGETApiPermissionPupperCdkStackPupperApiF6D14D0CGETimagesimageid18FFE4A4"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/images/{image_id}/GET/ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.GET..images.{image_id}": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApiimagesimageidGETApiPermissionTestPupperCdkStackPupperApiF6D14D0CGETimagesimageid6F5A690F"
-          }
-        ],
-        "/PupperCdkStack/PupperApi/Default/images/{image_id}/GET/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "PupperApiimagesimageidGET1EA4FC2B"
-          }
-        ],
-        "/PupperCdkStack/CDKMetadata/Default": [
+        "/PupperCognitoStack/CDKMetadata/Default": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CDKMetadata"
           }
         ],
-        "/PupperCdkStack/CDKMetadata/Condition": [
+        "/PupperCognitoStack/CDKMetadata/Condition": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CDKMetadataAvailable"
           }
         ],
-        "/PupperCdkStack/BootstrapVersion": [
+        "/PupperCognitoStack/BootstrapVersion": [
           {
             "type": "aws:cdk:logicalId",
             "data": "BootstrapVersion"
           }
         ],
-        "/PupperCdkStack/CheckBootstrapVersion": [
+        "/PupperCognitoStack/CheckBootstrapVersion": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CheckBootstrapVersion"
           }
         ]
       },
-      "displayName": "PupperCdkStack"
+      "displayName": "PupperCognitoStack"
     },
     "Tree": {
       "type": "cdk:tree",

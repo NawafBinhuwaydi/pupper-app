@@ -1,0 +1,19 @@
+{
+  "version": "34.0.0",
+  "files": {
+    "684a9dad16d0a501fabc6a1c8462243e80da98116e94550e1c6f7f3a831cf2ba": {
+      "source": {
+        "path": "PupperCognitoStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "684a9dad16d0a501fabc6a1c8462243e80da98116e94550e1c6f7f3a831cf2ba.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

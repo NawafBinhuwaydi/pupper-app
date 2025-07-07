@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { windowExists } from './helpers.mjs';\n\n// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.\n// SPDX-License-Identifier: Apache-2.0\nfunction webDetect() {\n  return windowExists();\n}\nexport { webDetect };\n//# sourceMappingURL=Web.mjs.map","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}
