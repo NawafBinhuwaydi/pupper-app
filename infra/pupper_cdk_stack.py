@@ -378,19 +378,32 @@ class PupperCdkStack(Stack):
                         )
                     ]
                 ),
+                "RekognitionAccess": iam.PolicyDocument(
+                    statements=[
+                        iam.PolicyStatement(
+                            effect=iam.Effect.ALLOW,
+                            actions=[
+                                "rekognition:DetectLabels",
+                                "rekognition:DetectText",
+                                "rekognition:DetectModerationLabels",
+                            ],
+                            resources=["*"],
+                        )
+                    ]
+                ),
             },
         )
 
         # Suppress CDK Nag findings for Lambda role
         # NagSuppressions.add_resource_suppressions(
-            lambda_role,
-            [
-                {
-                    "id": "AwsSolutions-IAM5",
-                    "reason": "Wildcard permissions needed for X-Ray tracing and DynamoDB GSI access",
-                }
-            ],
-        )
+        #     lambda_role,
+        #     [
+        #         {
+        #             "id": "AwsSolutions-IAM5",
+        #             "reason": "Wildcard permissions needed for X-Ray tracing and DynamoDB GSI access",
+        #         }
+        #     ],
+        # )
 
         # Lambda Functions with enhanced configuration
 
@@ -524,9 +537,34 @@ class PupperCdkStack(Stack):
             reserved_concurrent_executions=50,
         )
 
+        # Image classification function using Amazon Rekognition
+        self.image_classification_lambda = _lambda.Function(
+            self,
+            "ImageClassificationFunction",
+            runtime=_lambda.Runtime.PYTHON_3_9,
+            handler="classify.lambda_handler",
+            code=_lambda.Code.from_asset("backend/lambda/image_processing"),
+            layers=[self.lambda_layer],
+            role=lambda_role,
+            timeout=Duration.seconds(60),
+            memory_size=512,
+            tracing=_lambda.Tracing.ACTIVE,
+            environment={
+                "LOG_LEVEL": "INFO",
+                "POWERTOOLS_SERVICE_NAME": "pupper-image-classification",
+            },
+            reserved_concurrent_executions=20,
+        )
+
+        # Update image upload function environment to include classification function
+        self.image_upload_lambda.add_environment(
+            "CLASSIFICATION_FUNCTION", self.image_classification_lambda.function_name
+        )
+
         # Grant image processing function permission to invoke itself and other functions
         self.image_processing_lambda.grant_invoke(lambda_role)
         self.image_upload_lambda.grant_invoke(self.image_processing_lambda)
+        self.image_upload_lambda.grant_invoke(self.image_classification_lambda)
 
         # S3 event notification for automatic image processing
 
@@ -557,18 +595,20 @@ class PupperCdkStack(Stack):
             self.delete_dog_lambda,
             self.image_processing_lambda,
             self.image_upload_lambda,
+            self.image_classification_lambda,
         ]
 
-        for func in lambda_functions:
-            NagSuppressions.add_resource_suppressions(
-                func,
-                [
-                    {
-                        "id": "AwsSolutions-L1",
-                        "reason": "Python 3.9 is the latest stable runtime supported by our dependencies",
-                    }
-                ],
-            )
+        # Suppress CDK Nag findings for Lambda functions
+        # for func in lambda_functions:
+        #     NagSuppressions.add_resource_suppressions(
+        #         func,
+        #         [
+        #             {
+        #                 "id": "AwsSolutions-L1",
+        #                 "reason": "Python 3.9 is the latest stable runtime supported by our dependencies",
+        #             }
+        #         ],
+        #     )
 
         # API Gateway with enhanced security
         self.api = apigateway.RestApi(
@@ -598,26 +638,26 @@ class PupperCdkStack(Stack):
 
         # Suppress CDK Nag findings for API Gateway
         # NagSuppressions.add_resource_suppressions(
-            self.api,
-            [
-                {
-                    "id": "AwsSolutions-APIG2",
-                    "reason": "Request validation is handled at the Lambda function level",
-                },
-                {
-                    "id": "AwsSolutions-APIG3",
-                    "reason": "WAF is not required for this POC application",
-                },
-                {
-                    "id": "AwsSolutions-APIG4",
-                    "reason": "Authorization will be implemented in future iterations",
-                },
-                {
-                    "id": "AwsSolutions-COG4",
-                    "reason": "Cognito authorization will be implemented in future iterations",
-                },
-            ],
-        )
+        #     self.api,
+        #     [
+        #         {
+        #             "id": "AwsSolutions-APIG2",
+        #             "reason": "Request validation is handled at the Lambda function level",
+        #         },
+        #         {
+        #             "id": "AwsSolutions-APIG3",
+        #             "reason": "WAF is not required for this POC application",
+        #         },
+        #         {
+        #             "id": "AwsSolutions-APIG4",
+        #             "reason": "Authorization will be implemented in future iterations",
+        #         },
+        #         {
+        #             "id": "AwsSolutions-COG4",
+        #             "reason": "Cognito authorization will be implemented in future iterations",
+        #         },
+        #     ],
+        # )
 
         # API Resources and Methods
 

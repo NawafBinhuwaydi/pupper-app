@@ -884,7 +884,7 @@
      "S3Bucket": {
       "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
      },
-     "S3Key": "1b4747706777bca131637e134116b2d09ccec40d92f1ace28bda909ca6f11133.zip"
+     "S3Key": "1b4e30ad020f7b96b4ed70037fcb09e5db2fff8c74c5d8581d527a3fa4dbe3d5.zip"
     },
     "Environment": {
      "Variables": {
@@ -920,7 +920,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "PupperCdkStack/ImageUploadFunction/Resource",
-    "aws:asset:path": "asset.1b4747706777bca131637e134116b2d09ccec40d92f1ace28bda909ca6f11133",
+    "aws:asset:path": "asset.1b4e30ad020f7b96b4ed70037fcb09e5db2fff8c74c5d8581d527a3fa4dbe3d5",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }
@@ -932,7 +932,7 @@
      "S3Bucket": {
       "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
      },
-     "S3Key": "1b4747706777bca131637e134116b2d09ccec40d92f1ace28bda909ca6f11133.zip"
+     "S3Key": "1b4e30ad020f7b96b4ed70037fcb09e5db2fff8c74c5d8581d527a3fa4dbe3d5.zip"
     },
     "Environment": {
      "Variables": {
@@ -971,7 +971,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "PupperCdkStack/ImageProcessingFunction/Resource",
-    "aws:asset:path": "asset.1b4747706777bca131637e134116b2d09ccec40d92f1ace28bda909ca6f11133",
+    "aws:asset:path": "asset.1b4e30ad020f7b96b4ed70037fcb09e5db2fff8c74c5d8581d527a3fa4dbe3d5",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }

@@ -318,6 +318,26 @@ Vote on a dog (wag or growl).
 3. **Input Validation**: All inputs validated against schema requirements
 4. **Species Filtering**: Only Labrador Retrievers allowed (PR disaster prevention)
 5. **IAM Roles**: Least privilege access for Lambda functions
+6. **Image Classification**: Amazon Rekognition ensures only Labrador Retriever images are accepted
+
+## Image Classification
+
+The application uses **Amazon Rekognition** to automatically classify uploaded images and ensure only Labrador Retriever photos are accepted:
+
+- **Automatic Detection**: Uses AI to identify dog breeds in uploaded images
+- **High Accuracy**: Minimum 70% confidence threshold for breed detection
+- **Instant Rejection**: Non-Labrador images are immediately rejected and deleted
+- **Detailed Feedback**: Users receive specific information about why images were rejected
+- **Cost Efficient**: Only processes images that pass initial validation
+
+### Classification Process
+1. User uploads image via POST /images
+2. Image temporarily stored in S3
+3. Amazon Rekognition analyzes image content
+4. If Labrador detected → Image accepted for processing
+5. If not Labrador → Image deleted and user notified
+
+For detailed information, see [IMAGE_CLASSIFICATION.md](IMAGE_CLASSIFICATION.md).
 
 ## Image Processing
 
