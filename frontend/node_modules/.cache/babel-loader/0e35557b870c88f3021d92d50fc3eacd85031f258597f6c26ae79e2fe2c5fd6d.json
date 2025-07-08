@@ -1,0 +1,1 @@
+{"ast":null,"code":"export { DefaultAmplify as Amplify } from './initSingleton.mjs';\n//# sourceMappingURL=index.mjs.map","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

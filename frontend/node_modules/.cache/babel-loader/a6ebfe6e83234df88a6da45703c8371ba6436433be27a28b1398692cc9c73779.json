@@ -1,0 +1,1 @@
+{"ast":null,"code":"import sha1 from './sha1.js';\nimport v35, { DNS, URL } from './v35.js';\nexport { DNS, URL } from './v35.js';\nfunction v5(value, namespace, buf, offset) {\n  return v35(0x50, sha1, value, namespace, buf, offset);\n}\nv5.DNS = DNS;\nv5.URL = URL;\nexport default v5;","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

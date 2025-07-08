@@ -4,8 +4,9 @@ import { Heart, MapPin, Calendar, Scale, ThumbsUp, ThumbsDown, Edit } from 'luci
 import { apiUtils } from '../services/api';
 import { useFavorites, useVoteDog } from '../hooks/useDogs';
 import EditDogModal from './EditDogModal';
+import SearchHighlight from './SearchHighlight';
 
-const DogCard = ({ dog }) => {
+const DogCard = ({ dog, searchQuery = '' }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -119,11 +120,17 @@ const DogCard = ({ dog }) => {
           {/* Name and Location */}
           <div className="mb-3">
             <h3 className="text-lg font-semibold text-gray-900 mb-1 group-hover:text-primary-600 transition-colors">
-              {dog.dog_name || 'Adorable Labrador'}
+              <SearchHighlight 
+                text={dog.dog_name || 'Adorable Labrador'} 
+                searchQuery={searchQuery}
+              />
             </h3>
             <div className="flex items-center text-sm text-gray-600">
               <MapPin size={14} className="mr-1" />
-              <span>{dog.city}, {dog.state}</span>
+              <SearchHighlight 
+                text={`${dog.city}, ${dog.state}`} 
+                searchQuery={searchQuery}
+              />
             </div>
           </div>
 
@@ -142,7 +149,10 @@ const DogCard = ({ dog }) => {
           {/* Description */}
           {dog.dog_description && (
             <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-              {dog.dog_description}
+              <SearchHighlight 
+                text={dog.dog_description} 
+                searchQuery={searchQuery}
+              />
             </p>
           )}
 

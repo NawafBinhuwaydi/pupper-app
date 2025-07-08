@@ -1,0 +1,1 @@
+{"ast":null,"code":"export const fromUtf8 = input => new TextEncoder().encode(input);","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

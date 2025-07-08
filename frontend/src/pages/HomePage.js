@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Search, Heart, Filter, RefreshCw, Plus } from 'lucide-react';
 import { useDogs } from '../hooks/useDogs';
 import DogCard from '../components/DogCard';
@@ -27,10 +27,21 @@ const LoadingSkeleton = () => (
 );
 
 const HomePage = () => {
-  const [filters, setFilters] = useState({});
+  const navigate = useNavigate();
+  const [quickSearch, setQuickSearch] = useState('');
+  const [filters, setFilters] = useState({ status: 'available', limit: 12 });
   const [showFilters, setShowFilters] = useState(false);
   
   const { data, isLoading, error, refetch, isFetching } = useDogs(filters);
+
+  const handleQuickSearch = (e) => {
+    e.preventDefault();
+    if (quickSearch.trim()) {
+      navigate(`/search?search=${encodeURIComponent(quickSearch.trim())}`);
+    } else {
+      navigate('/search');
+    }
+  };
 
   const handleFilterChange = (key, value) => {
     setFilters(prev => ({
@@ -40,10 +51,12 @@ const HomePage = () => {
   };
 
   const clearFilters = () => {
-    setFilters({});
+    setFilters({ status: 'available', limit: 12 });
   };
 
-  const hasActiveFilters = Object.keys(filters).some(key => filters[key]);
+  const hasActiveFilters = Object.keys(filters).some(key => 
+    filters[key] && key !== 'status' && key !== 'limit'
+  );
 
   if (error) {
     return (
@@ -76,6 +89,31 @@ const HomePage = () => {
             <p className="text-xl md:text-2xl mb-8 text-blue-100">
               Discover amazing Labrador Retrievers looking for their forever homes
             </p>
+            
+            {/* Quick Search Bar */}
+            <div className="max-w-2xl mx-auto mb-8">
+              <form onSubmit={handleQuickSearch} className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Search className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Quick search: dog names, breeds, locations..."
+                  value={quickSearch}
+                  onChange={(e) => setQuickSearch(e.target.value)}
+                  className="block w-full pl-10 pr-20 py-4 border border-transparent rounded-lg focus:ring-2 focus:ring-white focus:border-white text-gray-900 text-lg placeholder-gray-500"
+                />
+                <div className="absolute inset-y-0 right-0 flex items-center">
+                  <button
+                    type="submit"
+                    className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-2 rounded-r-lg transition-colors font-medium"
+                  >
+                    Search
+                  </button>
+                </div>
+              </form>
+            </div>
+            
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/search" className="btn-secondary">
                 <Search className="mr-2" size={20} />
@@ -98,154 +136,152 @@ const HomePage = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Filters Bar */}
         <div className="mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="flex items-center space-x-4">
-              <h2 className="text-2xl font-bold text-gray-900">
-                Available Dogs
-              </h2>
-              {data?.data && (
-                <span className="text-gray-600">
-                  ({data.data.count} {data.data.count === 1 ? 'dog' : 'dogs'})
-                </span>
-              )}
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Link to="/add-dog" className="btn-primary">
-                <Plus size={18} className="mr-2" />
-                Add Dog
-              </Link>
-              
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className={`btn-ghost ${showFilters ? 'bg-gray-100' : ''}`}
-              >
-                <Filter size={18} className="mr-2" />
-                Filters
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                  <Filter size={16} />
+                  Quick Filters
+                </button>
+                
                 {hasActiveFilters && (
-                  <span className="ml-2 bg-primary-500 text-white text-xs px-2 py-1 rounded-full">
-                    {Object.keys(filters).filter(key => filters[key]).length}
-                  </span>
-                )}
-              </button>
-              
-              <button
-                onClick={() => refetch()}
-                disabled={isFetching}
-                className="btn-ghost"
-              >
-                <RefreshCw size={18} className={`mr-2 ${isFetching ? 'animate-spin' : ''}`} />
-                Refresh
-              </button>
-            </div>
-          </div>
-
-          {/* Filter Panel */}
-          {showFilters && (
-            <div className="mt-4 p-4 bg-white rounded-lg shadow-sm border border-gray-200">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    State
-                  </label>
-                  <select
-                    value={filters.state || ''}
-                    onChange={(e) => handleFilterChange('state', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                  >
-                    <option value="">All States</option>
-                    <option value="CA">California</option>
-                    <option value="TX">Texas</option>
-                    <option value="FL">Florida</option>
-                    <option value="NY">New York</option>
-                    <option value="VA">Virginia</option>
-                    <option value="WA">Washington</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Max Weight (lbs)
-                  </label>
-                  <input
-                    type="number"
-                    value={filters.max_weight || ''}
-                    onChange={(e) => handleFilterChange('max_weight', e.target.value)}
-                    placeholder="e.g. 80"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Color
-                  </label>
-                  <select
-                    value={filters.color || ''}
-                    onChange={(e) => handleFilterChange('color', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                  >
-                    <option value="">All Colors</option>
-                    <option value="black">Black</option>
-                    <option value="brown">Brown</option>
-                    <option value="yellow">Yellow</option>
-                    <option value="chocolate">Chocolate</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Max Age (years)
-                  </label>
-                  <input
-                    type="number"
-                    value={filters.max_age || ''}
-                    onChange={(e) => handleFilterChange('max_age', e.target.value)}
-                    placeholder="e.g. 5"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                  />
-                </div>
-              </div>
-
-              {hasActiveFilters && (
-                <div className="mt-4 pt-4 border-t border-gray-200">
                   <button
                     onClick={clearFilters}
-                    className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
                   >
-                    Clear all filters
+                    <RefreshCw size={16} />
+                    Clear
                   </button>
-                </div>
-              )}
+                )}
+              </div>
+              
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-gray-600">
+                  {data?.data?.pagination?.total_items || 0} dogs available
+                </span>
+                <button
+                  onClick={() => refetch()}
+                  disabled={isFetching}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors disabled:opacity-50"
+                >
+                  <RefreshCw size={16} className={isFetching ? 'animate-spin' : ''} />
+                  Refresh
+                </button>
+              </div>
             </div>
-          )}
+            
+            {/* Quick Filters */}
+            {showFilters && (
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
+                    <select
+                      value={filters.state || ''}
+                      onChange={(e) => handleFilterChange('state', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    >
+                      <option value="">All States</option>
+                      <option value="CA">California</option>
+                      <option value="TX">Texas</option>
+                      <option value="FL">Florida</option>
+                      <option value="NY">New York</option>
+                      <option value="VA">Virginia</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Max Weight</label>
+                    <select
+                      value={filters.max_weight || ''}
+                      onChange={(e) => handleFilterChange('max_weight', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    >
+                      <option value="">Any Weight</option>
+                      <option value="30">Under 30 lbs</option>
+                      <option value="50">Under 50 lbs</option>
+                      <option value="70">Under 70 lbs</option>
+                      <option value="100">Under 100 lbs</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Age Range</label>
+                    <select
+                      value={filters.max_age || ''}
+                      onChange={(e) => handleFilterChange('max_age', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    >
+                      <option value="">Any Age</option>
+                      <option value="1">Puppies (Under 1 year)</option>
+                      <option value="3">Young (Under 3 years)</option>
+                      <option value="7">Adult (Under 7 years)</option>
+                      <option value="15">Senior (Under 15 years)</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Color</label>
+                    <select
+                      value={filters.color || ''}
+                      onChange={(e) => handleFilterChange('color', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    >
+                      <option value="">All Colors</option>
+                      <option value="black">Black</option>
+                      <option value="brown">Brown</option>
+                      <option value="yellow">Yellow</option>
+                      <option value="chocolate">Chocolate</option>
+                      <option value="golden">Golden</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Dogs Grid */}
         {isLoading ? (
           <LoadingSkeleton />
-        ) : data?.data?.dogs?.length > 0 ? (
-          <div className="dog-grid">
-            {data.data.dogs.map((dog) => (
-              <DogCard key={dog.dog_id} dog={dog} />
-            ))}
-          </div>
         ) : (
-          <div className="text-center py-16">
-            <div className="text-6xl mb-4">🐕</div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">No dogs found</h3>
-            <p className="text-gray-600 mb-4">
-              {hasActiveFilters 
-                ? "Try adjusting your filters to see more results."
-                : "We're working on adding adorable Labradors to our database. Check back soon!"
-              }
-            </p>
-            {hasActiveFilters && (
-              <button onClick={clearFilters} className="btn-primary">
-                Clear Filters
-              </button>
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+              {data?.data?.dogs?.map((dog) => (
+                <DogCard key={dog.dog_id} dog={dog} />
+              ))}
+            </div>
+            
+            {/* Show More Button */}
+            {data?.data?.dogs?.length > 0 && data?.data?.pagination?.has_next && (
+              <div className="text-center">
+                <Link
+                  to="/search"
+                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 transition-colors"
+                >
+                  View All Dogs
+                  <Search className="ml-2" size={20} />
+                </Link>
+              </div>
             )}
-          </div>
+            
+            {data?.data?.dogs?.length === 0 && (
+              <div className="text-center py-12">
+                <div className="text-6xl mb-4">🐕</div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No dogs match your criteria</h3>
+                <p className="text-gray-600 mb-4">
+                  Try adjusting your filters or check back later for new arrivals.
+                </p>
+                <Link to="/search" className="btn-primary">
+                  <Search className="mr-2" size={18} />
+                  Advanced Search
+                </Link>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
