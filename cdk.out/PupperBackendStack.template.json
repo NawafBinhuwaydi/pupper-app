@@ -1,0 +1,2914 @@
+{
+ "Description": "Pupper Dog Adoption API Backend Infrastructure",
+ "Resources": {
+  "PupperImagesBucketD100108D": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketName": {
+     "Fn::Join": [
+      "",
+      [
+       "pupper-images-",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       "-",
+       {
+        "Ref": "AWS::Region"
+       }
+      ]
+     ]
+    },
+    "Tags": [
+     {
+      "Key": "aws-cdk:auto-delete-objects",
+      "Value": "true"
+     },
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "Pupper"
+     }
+    ],
+    "VersioningConfiguration": {
+     "Status": "Enabled"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperImagesBucket/Resource"
+   }
+  },
+  "PupperImagesBucketPolicy2F8AE4CC": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "PupperImagesBucketD100108D"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:PutBucketPolicy"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::GetAtt": [
+          "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+          "Arn"
+         ]
+        }
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "PupperImagesBucketD100108D",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "PupperImagesBucketD100108D",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperImagesBucket/Policy/Resource"
+   }
+  },
+  "PupperImagesBucketAutoDeleteObjectsCustomResourceAC1F450C": {
+   "Type": "Custom::S3AutoDeleteObjects",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+      "Arn"
+     ]
+    },
+    "BucketName": {
+     "Ref": "PupperImagesBucketD100108D"
+    }
+   },
+   "DependsOn": [
+    "PupperImagesBucketPolicy2F8AE4CC"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperImagesBucket/AutoDeleteObjectsCustomResource/Default"
+   }
+  },
+  "PupperImagesBucketNotifications13CFE64D": {
+   "Type": "Custom::S3BucketNotifications",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691",
+      "Arn"
+     ]
+    },
+    "BucketName": {
+     "Ref": "PupperImagesBucketD100108D"
+    },
+    "NotificationConfiguration": {
+     "LambdaFunctionConfigurations": [
+      {
+       "Events": [
+        "s3:ObjectCreated:*"
+       ],
+       "Filter": {
+        "Key": {
+         "FilterRules": [
+          {
+           "Name": "suffix",
+           "Value": ".jpg"
+          },
+          {
+           "Name": "prefix",
+           "Value": "uploads/"
+          }
+         ]
+        }
+       },
+       "LambdaFunctionArn": {
+        "Fn::GetAtt": [
+         "ImageProcessingFunction2728E0B4",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Events": [
+        "s3:ObjectCreated:*"
+       ],
+       "Filter": {
+        "Key": {
+         "FilterRules": [
+          {
+           "Name": "suffix",
+           "Value": ".jpeg"
+          },
+          {
+           "Name": "prefix",
+           "Value": "uploads/"
+          }
+         ]
+        }
+       },
+       "LambdaFunctionArn": {
+        "Fn::GetAtt": [
+         "ImageProcessingFunction2728E0B4",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Events": [
+        "s3:ObjectCreated:*"
+       ],
+       "Filter": {
+        "Key": {
+         "FilterRules": [
+          {
+           "Name": "suffix",
+           "Value": ".png"
+          },
+          {
+           "Name": "prefix",
+           "Value": "uploads/"
+          }
+         ]
+        }
+       },
+       "LambdaFunctionArn": {
+        "Fn::GetAtt": [
+         "ImageProcessingFunction2728E0B4",
+         "Arn"
+        ]
+       }
+      }
+     ]
+    },
+    "Managed": true
+   },
+   "DependsOn": [
+    "PupperImagesBucketAllowBucketNotificationsToPupperBackendStackImageProcessingFunction3ACF3515A911BFF9"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperImagesBucket/Notifications/Resource"
+   }
+  },
+  "PupperImagesBucketAllowBucketNotificationsToPupperBackendStackImageProcessingFunction3ACF3515A911BFF9": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ImageProcessingFunction2728E0B4",
+      "Arn"
+     ]
+    },
+    "Principal": "s3.amazonaws.com",
+    "SourceAccount": {
+     "Ref": "AWS::AccountId"
+    },
+    "SourceArn": {
+     "Fn::GetAtt": [
+      "PupperImagesBucketD100108D",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperImagesBucket/AllowBucketNotificationsToPupperBackendStackImageProcessingFunction3ACF3515"
+   }
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role"
+   }
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "b7f33614a69548d6bafe224d751a7ef238cde19097415e553fe8b63a4c8fd8a6.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       "Lambda function for auto-deleting objects in ",
+       {
+        "Ref": "PupperImagesBucketD100108D"
+       },
+       " S3 bucket."
+      ]
+     ]
+    }
+   },
+   "DependsOn": [
+    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
+    "aws:asset:path": "asset.b7f33614a69548d6bafe224d751a7ef238cde19097415e553fe8b63a4c8fd8a6",
+    "aws:asset:property": "Code"
+   }
+  },
+  "DogsTable78D17CEF": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "dog_id",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "state",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "created_at",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "dog_color",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "GlobalSecondaryIndexes": [
+     {
+      "IndexName": "StateIndex",
+      "KeySchema": [
+       {
+        "AttributeName": "state",
+        "KeyType": "HASH"
+       },
+       {
+        "AttributeName": "created_at",
+        "KeyType": "RANGE"
+       }
+      ],
+      "Projection": {
+       "ProjectionType": "ALL"
+      }
+     },
+     {
+      "IndexName": "ColorIndex",
+      "KeySchema": [
+       {
+        "AttributeName": "dog_color",
+        "KeyType": "HASH"
+       },
+       {
+        "AttributeName": "created_at",
+        "KeyType": "RANGE"
+       }
+      ],
+      "Projection": {
+       "ProjectionType": "ALL"
+      }
+     }
+    ],
+    "KeySchema": [
+     {
+      "AttributeName": "dog_id",
+      "KeyType": "HASH"
+     }
+    ],
+    "PointInTimeRecoverySpecification": {
+     "PointInTimeRecoveryEnabled": true
+    },
+    "TableName": "pupper-dogs",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "Pupper"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/DogsTable/Resource"
+   }
+  },
+  "UsersTable9725E9C8": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "user_id",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "KeySchema": [
+     {
+      "AttributeName": "user_id",
+      "KeyType": "HASH"
+     }
+    ],
+    "TableName": "pupper-users",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "Pupper"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/UsersTable/Resource"
+   }
+  },
+  "VotesTable39A917AC": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "user_id",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "dog_id",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "vote_type",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "GlobalSecondaryIndexes": [
+     {
+      "IndexName": "DogVotesIndex",
+      "KeySchema": [
+       {
+        "AttributeName": "dog_id",
+        "KeyType": "HASH"
+       },
+       {
+        "AttributeName": "vote_type",
+        "KeyType": "RANGE"
+       }
+      ],
+      "Projection": {
+       "ProjectionType": "ALL"
+      }
+     }
+    ],
+    "KeySchema": [
+     {
+      "AttributeName": "user_id",
+      "KeyType": "HASH"
+     },
+     {
+      "AttributeName": "dog_id",
+      "KeyType": "RANGE"
+     }
+    ],
+    "TableName": "pupper-votes",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "Pupper"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/VotesTable/Resource"
+   }
+  },
+  "SheltersTableA42E105E": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "shelter_id",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "KeySchema": [
+     {
+      "AttributeName": "shelter_id",
+      "KeyType": "HASH"
+     }
+    ],
+    "TableName": "pupper-shelters",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "Pupper"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/SheltersTable/Resource"
+   }
+  },
+  "ImagesTable39278AD9": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "image_id",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "dog_id",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "created_at",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "GlobalSecondaryIndexes": [
+     {
+      "IndexName": "DogImagesIndex",
+      "KeySchema": [
+       {
+        "AttributeName": "dog_id",
+        "KeyType": "HASH"
+       },
+       {
+        "AttributeName": "created_at",
+        "KeyType": "RANGE"
+       }
+      ],
+      "Projection": {
+       "ProjectionType": "ALL"
+      }
+     }
+    ],
+    "KeySchema": [
+     {
+      "AttributeName": "image_id",
+      "KeyType": "HASH"
+     }
+    ],
+    "TableName": "pupper-images",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "Pupper"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/ImagesTable/Resource"
+   }
+  },
+  "PupperLambdaRole893178A8": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AWSXRayDaemonWriteAccess"
+       ]
+      ]
+     }
+    ],
+    "Policies": [
+     {
+      "PolicyDocument": {
+       "Statement": [
+        {
+         "Action": [
+          "dynamodb:DeleteItem",
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:Query",
+          "dynamodb:Scan",
+          "dynamodb:UpdateItem"
+         ],
+         "Effect": "Allow",
+         "Resource": {
+          "Fn::Join": [
+           "",
+           [
+            "arn:aws:dynamodb:",
+            {
+             "Ref": "AWS::Region"
+            },
+            ":",
+            {
+             "Ref": "AWS::AccountId"
+            },
+            ":table/pupper-*"
+           ]
+          ]
+         }
+        }
+       ],
+       "Version": "2012-10-17"
+      },
+      "PolicyName": "DynamoDBAccess"
+     },
+     {
+      "PolicyDocument": {
+       "Statement": [
+        {
+         "Action": [
+          "s3:DeleteObject",
+          "s3:GetObject",
+          "s3:PutObject"
+         ],
+         "Effect": "Allow",
+         "Resource": {
+          "Fn::Join": [
+           "",
+           [
+            "arn:aws:s3:::pupper-images-",
+            {
+             "Ref": "AWS::AccountId"
+            },
+            "-",
+            {
+             "Ref": "AWS::Region"
+            },
+            "/*"
+           ]
+          ]
+         }
+        },
+        {
+         "Action": "s3:ListBucket",
+         "Effect": "Allow",
+         "Resource": {
+          "Fn::Join": [
+           "",
+           [
+            "arn:aws:s3:::pupper-images-",
+            {
+             "Ref": "AWS::AccountId"
+            },
+            "-",
+            {
+             "Ref": "AWS::Region"
+            }
+           ]
+          ]
+         }
+        }
+       ],
+       "Version": "2012-10-17"
+      },
+      "PolicyName": "S3Access"
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "Pupper"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperLambdaRole/Resource"
+   }
+  },
+  "PupperLambdaRoleDefaultPolicy68E9E62F": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "xray:PutTelemetryRecords",
+        "xray:PutTraceSegments"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "PupperLambdaRoleDefaultPolicy68E9E62F",
+    "Roles": [
+     {
+      "Ref": "PupperLambdaRole893178A8"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperLambdaRole/DefaultPolicy/Resource"
+   }
+  },
+  "CreateDogFunctionFED218F0": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "033888db2274780811cdc94411cd7916218e7c7faebdd809a3a00aac612c88b2.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "DOGS_TABLE": {
+       "Ref": "DogsTable78D17CEF"
+      },
+      "IMAGES_BUCKET": {
+       "Ref": "PupperImagesBucketD100108D"
+      },
+      "SHELTERS_TABLE": {
+       "Ref": "SheltersTableA42E105E"
+      },
+      "IMAGES_TABLE": {
+       "Ref": "ImagesTable39278AD9"
+      },
+      "LOG_LEVEL": "INFO"
+     }
+    },
+    "Handler": "create.lambda_handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "PupperLambdaRole893178A8",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.9",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "Pupper"
+     }
+    ],
+    "Timeout": 30,
+    "TracingConfig": {
+     "Mode": "Active"
+    }
+   },
+   "DependsOn": [
+    "PupperLambdaRoleDefaultPolicy68E9E62F",
+    "PupperLambdaRole893178A8"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/CreateDogFunction/Resource",
+    "aws:asset:path": "asset.033888db2274780811cdc94411cd7916218e7c7faebdd809a3a00aac612c88b2",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ReadDogFunction8641CD5D": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "033888db2274780811cdc94411cd7916218e7c7faebdd809a3a00aac612c88b2.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "DOGS_TABLE": {
+       "Ref": "DogsTable78D17CEF"
+      },
+      "IMAGES_BUCKET": {
+       "Ref": "PupperImagesBucketD100108D"
+      },
+      "LOG_LEVEL": "INFO"
+     }
+    },
+    "Handler": "read.lambda_handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "PupperLambdaRole893178A8",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.9",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "Pupper"
+     }
+    ],
+    "Timeout": 30,
+    "TracingConfig": {
+     "Mode": "Active"
+    }
+   },
+   "DependsOn": [
+    "PupperLambdaRoleDefaultPolicy68E9E62F",
+    "PupperLambdaRole893178A8"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/ReadDogFunction/Resource",
+    "aws:asset:path": "asset.033888db2274780811cdc94411cd7916218e7c7faebdd809a3a00aac612c88b2",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "UpdateDogFunctionACC97248": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "033888db2274780811cdc94411cd7916218e7c7faebdd809a3a00aac612c88b2.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "DOGS_TABLE": {
+       "Ref": "DogsTable78D17CEF"
+      },
+      "IMAGES_BUCKET": {
+       "Ref": "PupperImagesBucketD100108D"
+      },
+      "VOTES_TABLE": {
+       "Ref": "VotesTable39A917AC"
+      },
+      "LOG_LEVEL": "INFO"
+     }
+    },
+    "Handler": "update.lambda_handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "PupperLambdaRole893178A8",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.9",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "Pupper"
+     }
+    ],
+    "Timeout": 30,
+    "TracingConfig": {
+     "Mode": "Active"
+    }
+   },
+   "DependsOn": [
+    "PupperLambdaRoleDefaultPolicy68E9E62F",
+    "PupperLambdaRole893178A8"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/UpdateDogFunction/Resource",
+    "aws:asset:path": "asset.033888db2274780811cdc94411cd7916218e7c7faebdd809a3a00aac612c88b2",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "DeleteDogFunction87D16C98": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "033888db2274780811cdc94411cd7916218e7c7faebdd809a3a00aac612c88b2.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "DOGS_TABLE": {
+       "Ref": "DogsTable78D17CEF"
+      },
+      "IMAGES_BUCKET": {
+       "Ref": "PupperImagesBucketD100108D"
+      },
+      "LOG_LEVEL": "INFO"
+     }
+    },
+    "Handler": "delete.lambda_handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "PupperLambdaRole893178A8",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.9",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "Pupper"
+     }
+    ],
+    "Timeout": 30,
+    "TracingConfig": {
+     "Mode": "Active"
+    }
+   },
+   "DependsOn": [
+    "PupperLambdaRoleDefaultPolicy68E9E62F",
+    "PupperLambdaRole893178A8"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/DeleteDogFunction/Resource",
+    "aws:asset:path": "asset.033888db2274780811cdc94411cd7916218e7c7faebdd809a3a00aac612c88b2",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ImageUploadFunction1528BFB7": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "ab135113da3ce8a933e42468d96443997821dcc452bfc38687465ac06e330c14.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "IMAGES_BUCKET": {
+       "Ref": "PupperImagesBucketD100108D"
+      },
+      "DOGS_TABLE": {
+       "Ref": "DogsTable78D17CEF"
+      },
+      "IMAGES_TABLE": {
+       "Ref": "ImagesTable39278AD9"
+      },
+      "LOG_LEVEL": "INFO"
+     }
+    },
+    "Handler": "upload.lambda_handler",
+    "MemorySize": 1024,
+    "Role": {
+     "Fn::GetAtt": [
+      "PupperLambdaRole893178A8",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.9",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "Pupper"
+     }
+    ],
+    "Timeout": 60,
+    "TracingConfig": {
+     "Mode": "Active"
+    }
+   },
+   "DependsOn": [
+    "PupperLambdaRoleDefaultPolicy68E9E62F",
+    "PupperLambdaRole893178A8"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/ImageUploadFunction/Resource",
+    "aws:asset:path": "asset.ab135113da3ce8a933e42468d96443997821dcc452bfc38687465ac06e330c14",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ImageProcessingFunction2728E0B4": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "ab135113da3ce8a933e42468d96443997821dcc452bfc38687465ac06e330c14.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "IMAGES_BUCKET": {
+       "Ref": "PupperImagesBucketD100108D"
+      },
+      "DOGS_TABLE": {
+       "Ref": "DogsTable78D17CEF"
+      },
+      "IMAGES_TABLE": {
+       "Ref": "ImagesTable39278AD9"
+      },
+      "LOG_LEVEL": "INFO"
+     }
+    },
+    "EphemeralStorage": {
+     "Size": 2048
+    },
+    "Handler": "resize.lambda_handler",
+    "MemorySize": 3008,
+    "Role": {
+     "Fn::GetAtt": [
+      "PupperLambdaRole893178A8",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.9",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "Pupper"
+     }
+    ],
+    "Timeout": 300,
+    "TracingConfig": {
+     "Mode": "Active"
+    }
+   },
+   "DependsOn": [
+    "PupperLambdaRoleDefaultPolicy68E9E62F",
+    "PupperLambdaRole893178A8"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/ImageProcessingFunction/Resource",
+    "aws:asset:path": "asset.ab135113da3ce8a933e42468d96443997821dcc452bfc38687465ac06e330c14",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "Pupper"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/Resource"
+   }
+  },
+  "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:PutBucketNotification",
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36",
+    "Roles": [
+     {
+      "Ref": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/DefaultPolicy/Resource"
+   }
+  },
+  "BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Description": "AWS CloudFormation handler for \"Custom::S3BucketNotifications\" resources (@aws-cdk/aws-s3)",
+    "Code": {
+     "ZipFile": "import boto3  # type: ignore\nimport json\nimport logging\nimport urllib.request\n\ns3 = boto3.client(\"s3\")\n\nEVENTBRIDGE_CONFIGURATION = 'EventBridgeConfiguration'\n\nCONFIGURATION_TYPES = [\"TopicConfigurations\", \"QueueConfigurations\", \"LambdaFunctionConfigurations\"]\n\ndef handler(event: dict, context):\n  response_status = \"SUCCESS\"\n  error_message = \"\"\n  try:\n    props = event[\"ResourceProperties\"]\n    bucket = props[\"BucketName\"]\n    notification_configuration = props[\"NotificationConfiguration\"]\n    request_type = event[\"RequestType\"]\n    managed = props.get('Managed', 'true').lower() == 'true'\n    stack_id = event['StackId']\n\n    if managed:\n      config = handle_managed(request_type, notification_configuration)\n    else:\n      config = handle_unmanaged(bucket, stack_id, request_type, notification_configuration)\n\n    put_bucket_notification_configuration(bucket, config)\n  except Exception as e:\n    logging.exception(\"Failed to put bucket notification configuration\")\n    response_status = \"FAILED\"\n    error_message = f\"Error: {str(e)}. \"\n  finally:\n    submit_response(event, context, response_status, error_message)\n\ndef handle_managed(request_type, notification_configuration):\n  if request_type == 'Delete':\n    return {}\n  return notification_configuration\n\ndef handle_unmanaged(bucket, stack_id, request_type, notification_configuration):\n  external_notifications = find_external_notifications(bucket, stack_id)\n\n  if request_type == 'Delete':\n    return external_notifications\n\n  def with_id(notification):\n    notification['Id'] = f\"{stack_id}-{hash(json.dumps(notification, sort_keys=True))}\"\n    return notification\n\n  notifications = {}\n  for t in CONFIGURATION_TYPES:\n    external = external_notifications.get(t, [])\n    incoming = [with_id(n) for n in notification_configuration.get(t, [])]\n    notifications[t] = external + incoming\n\n  if EVENTBRIDGE_CONFIGURATION in notification_configuration:\n    notifications[EVENTBRIDGE_CONFIGURATION] = notification_configuration[EVENTBRIDGE_CONFIGURATION]\n  elif EVENTBRIDGE_CONFIGURATION in external_notifications:\n    notifications[EVENTBRIDGE_CONFIGURATION] = external_notifications[EVENTBRIDGE_CONFIGURATION]\n\n  return notifications\n\ndef find_external_notifications(bucket, stack_id):\n  existing_notifications = get_bucket_notification_configuration(bucket)\n  external_notifications = {}\n  for t in CONFIGURATION_TYPES:\n    external_notifications[t] = [n for n in existing_notifications.get(t, []) if not n['Id'].startswith(f\"{stack_id}-\")]\n\n  if EVENTBRIDGE_CONFIGURATION in existing_notifications:\n    external_notifications[EVENTBRIDGE_CONFIGURATION] = existing_notifications[EVENTBRIDGE_CONFIGURATION]\n\n  return external_notifications\n\ndef get_bucket_notification_configuration(bucket):\n  return s3.get_bucket_notification_configuration(Bucket=bucket)\n\ndef put_bucket_notification_configuration(bucket, notification_configuration):\n  s3.put_bucket_notification_configuration(Bucket=bucket, NotificationConfiguration=notification_configuration)\n\ndef submit_response(event: dict, context, response_status: str, error_message: str):\n  response_body = json.dumps(\n    {\n      \"Status\": response_status,\n      \"Reason\": f\"{error_message}See the details in CloudWatch Log Stream: {context.log_stream_name}\",\n      \"PhysicalResourceId\": event.get(\"PhysicalResourceId\") or event[\"LogicalResourceId\"],\n      \"StackId\": event[\"StackId\"],\n      \"RequestId\": event[\"RequestId\"],\n      \"LogicalResourceId\": event[\"LogicalResourceId\"],\n      \"NoEcho\": False,\n    }\n  ).encode(\"utf-8\")\n  headers = {\"content-type\": \"\", \"content-length\": str(len(response_body))}\n  try:\n    req = urllib.request.Request(url=event[\"ResponseURL\"], headers=headers, data=response_body, method=\"PUT\")\n    with urllib.request.urlopen(req) as response:\n      print(response.read().decode(\"utf-8\"))\n    print(\"Status code: \" + response.reason)\n  except Exception as e:\n      print(\"send(..) failed executing request.urlopen(..): \" + str(e))\n"
+    },
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.9",
+    "Timeout": 300,
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "Pupper"
+     }
+    ]
+   },
+   "DependsOn": [
+    "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36",
+    "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Resource"
+   }
+  },
+  "PupperApiCF69E181": {
+   "Type": "AWS::ApiGateway::RestApi",
+   "Properties": {
+    "Description": "API for Pupper dog adoption app",
+    "Name": "Pupper API",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "Pupper"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Resource"
+   }
+  },
+  "PupperApiDeployment714C7E7Cd7023f1044eddb6c06bdb21d9c7389f2": {
+   "Type": "AWS::ApiGateway::Deployment",
+   "Properties": {
+    "Description": "API for Pupper dog adoption app",
+    "RestApiId": {
+     "Ref": "PupperApiCF69E181"
+    }
+   },
+   "DependsOn": [
+    "PupperApidogsdogidDELETE576F06E5",
+    "PupperApidogsdogidGETD720C812",
+    "PupperApidogsdogidOPTIONSA2567FFF",
+    "PupperApidogsdogidPUTE457F455",
+    "PupperApidogsdogid43152FE7",
+    "PupperApidogsdogidvoteOPTIONS266DD892",
+    "PupperApidogsdogidvotePOST30F901C9",
+    "PupperApidogsdogidvoteC9D8C6C1",
+    "PupperApidogsGET8CF63279",
+    "PupperApidogsOPTIONS8C0BA6CE",
+    "PupperApidogsPOSTD2B177F5",
+    "PupperApidogs5C027535",
+    "PupperApiimagesimageidGET1EA4FC2B",
+    "PupperApiimagesimageidOPTIONS32803738",
+    "PupperApiimagesimageid333D910B",
+    "PupperApiimagesOPTIONS1C292AB9",
+    "PupperApiimagesPOSTBF806986",
+    "PupperApiimages82FD10B9",
+    "PupperApiOPTIONS1AE22176"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Deployment/Resource"
+   }
+  },
+  "PupperApiDeploymentStageprod6CE535E3": {
+   "Type": "AWS::ApiGateway::Stage",
+   "Properties": {
+    "DeploymentId": {
+     "Ref": "PupperApiDeployment714C7E7Cd7023f1044eddb6c06bdb21d9c7389f2"
+    },
+    "RestApiId": {
+     "Ref": "PupperApiCF69E181"
+    },
+    "StageName": "prod",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "Production"
+     },
+     {
+      "Key": "Project",
+      "Value": "Pupper"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/DeploymentStage.prod/Resource"
+   }
+  },
+  "PupperApiOPTIONS1AE22176": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Fn::GetAtt": [
+      "PupperApiCF69E181",
+      "RootResourceId"
+     ]
+    },
+    "RestApiId": {
+     "Ref": "PupperApiCF69E181"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/OPTIONS/Resource"
+   }
+  },
+  "PupperApidogs5C027535": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "PupperApiCF69E181",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "dogs",
+    "RestApiId": {
+     "Ref": "PupperApiCF69E181"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/Resource"
+   }
+  },
+  "PupperApidogsOPTIONS8C0BA6CE": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "PupperApidogs5C027535"
+    },
+    "RestApiId": {
+     "Ref": "PupperApiCF69E181"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/OPTIONS/Resource"
+   }
+  },
+  "PupperApidogsPOSTApiPermissionPupperBackendStackPupperApiD5F65D83POSTdogsAF852122": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "CreateDogFunctionFED218F0",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "PupperApiCF69E181"
+       },
+       "/",
+       {
+        "Ref": "PupperApiDeploymentStageprod6CE535E3"
+       },
+       "/POST/dogs"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/POST/ApiPermission.PupperBackendStackPupperApiD5F65D83.POST..dogs"
+   }
+  },
+  "PupperApidogsPOSTApiPermissionTestPupperBackendStackPupperApiD5F65D83POSTdogs0EF6CC1B": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "CreateDogFunctionFED218F0",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "PupperApiCF69E181"
+       },
+       "/test-invoke-stage/POST/dogs"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/POST/ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.POST..dogs"
+   }
+  },
+  "PupperApidogsPOSTD2B177F5": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:",
+        {
+         "Ref": "AWS::Region"
+        },
+        ":lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "CreateDogFunctionFED218F0",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "PupperApidogs5C027535"
+    },
+    "RestApiId": {
+     "Ref": "PupperApiCF69E181"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/POST/Resource"
+   }
+  },
+  "PupperApidogsGETApiPermissionPupperBackendStackPupperApiD5F65D83GETdogsB4EACDD4": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ReadDogFunction8641CD5D",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "PupperApiCF69E181"
+       },
+       "/",
+       {
+        "Ref": "PupperApiDeploymentStageprod6CE535E3"
+       },
+       "/GET/dogs"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/GET/ApiPermission.PupperBackendStackPupperApiD5F65D83.GET..dogs"
+   }
+  },
+  "PupperApidogsGETApiPermissionTestPupperBackendStackPupperApiD5F65D83GETdogs5A905AC1": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ReadDogFunction8641CD5D",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "PupperApiCF69E181"
+       },
+       "/test-invoke-stage/GET/dogs"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/GET/ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.GET..dogs"
+   }
+  },
+  "PupperApidogsGET8CF63279": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:",
+        {
+         "Ref": "AWS::Region"
+        },
+        ":lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ReadDogFunction8641CD5D",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "PupperApidogs5C027535"
+    },
+    "RestApiId": {
+     "Ref": "PupperApiCF69E181"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/GET/Resource"
+   }
+  },
+  "PupperApidogsdogid43152FE7": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "PupperApidogs5C027535"
+    },
+    "PathPart": "{dog_id}",
+    "RestApiId": {
+     "Ref": "PupperApiCF69E181"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/Resource"
+   }
+  },
+  "PupperApidogsdogidOPTIONSA2567FFF": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "PupperApidogsdogid43152FE7"
+    },
+    "RestApiId": {
+     "Ref": "PupperApiCF69E181"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/OPTIONS/Resource"
+   }
+  },
+  "PupperApidogsdogidGETApiPermissionPupperBackendStackPupperApiD5F65D83GETdogsdogidEA836411": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ReadDogFunction8641CD5D",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "PupperApiCF69E181"
+       },
+       "/",
+       {
+        "Ref": "PupperApiDeploymentStageprod6CE535E3"
+       },
+       "/GET/dogs/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/GET/ApiPermission.PupperBackendStackPupperApiD5F65D83.GET..dogs.{dog_id}"
+   }
+  },
+  "PupperApidogsdogidGETApiPermissionTestPupperBackendStackPupperApiD5F65D83GETdogsdogid000650F7": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ReadDogFunction8641CD5D",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "PupperApiCF69E181"
+       },
+       "/test-invoke-stage/GET/dogs/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/GET/ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.GET..dogs.{dog_id}"
+   }
+  },
+  "PupperApidogsdogidGETD720C812": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:",
+        {
+         "Ref": "AWS::Region"
+        },
+        ":lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ReadDogFunction8641CD5D",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "PupperApidogsdogid43152FE7"
+    },
+    "RestApiId": {
+     "Ref": "PupperApiCF69E181"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/GET/Resource"
+   }
+  },
+  "PupperApidogsdogidPUTApiPermissionPupperBackendStackPupperApiD5F65D83PUTdogsdogid41C4CDDC": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "UpdateDogFunctionACC97248",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "PupperApiCF69E181"
+       },
+       "/",
+       {
+        "Ref": "PupperApiDeploymentStageprod6CE535E3"
+       },
+       "/PUT/dogs/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/PUT/ApiPermission.PupperBackendStackPupperApiD5F65D83.PUT..dogs.{dog_id}"
+   }
+  },
+  "PupperApidogsdogidPUTApiPermissionTestPupperBackendStackPupperApiD5F65D83PUTdogsdogid2B361903": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "UpdateDogFunctionACC97248",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "PupperApiCF69E181"
+       },
+       "/test-invoke-stage/PUT/dogs/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/PUT/ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.PUT..dogs.{dog_id}"
+   }
+  },
+  "PupperApidogsdogidPUTE457F455": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "PUT",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:",
+        {
+         "Ref": "AWS::Region"
+        },
+        ":lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "UpdateDogFunctionACC97248",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "PupperApidogsdogid43152FE7"
+    },
+    "RestApiId": {
+     "Ref": "PupperApiCF69E181"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/PUT/Resource"
+   }
+  },
+  "PupperApidogsdogidDELETEApiPermissionPupperBackendStackPupperApiD5F65D83DELETEdogsdogidC4464545": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "DeleteDogFunction87D16C98",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "PupperApiCF69E181"
+       },
+       "/",
+       {
+        "Ref": "PupperApiDeploymentStageprod6CE535E3"
+       },
+       "/DELETE/dogs/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/DELETE/ApiPermission.PupperBackendStackPupperApiD5F65D83.DELETE..dogs.{dog_id}"
+   }
+  },
+  "PupperApidogsdogidDELETEApiPermissionTestPupperBackendStackPupperApiD5F65D83DELETEdogsdogid6BC96F32": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "DeleteDogFunction87D16C98",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "PupperApiCF69E181"
+       },
+       "/test-invoke-stage/DELETE/dogs/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/DELETE/ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.DELETE..dogs.{dog_id}"
+   }
+  },
+  "PupperApidogsdogidDELETE576F06E5": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "DELETE",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:",
+        {
+         "Ref": "AWS::Region"
+        },
+        ":lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "DeleteDogFunction87D16C98",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "PupperApidogsdogid43152FE7"
+    },
+    "RestApiId": {
+     "Ref": "PupperApiCF69E181"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/DELETE/Resource"
+   }
+  },
+  "PupperApidogsdogidvoteC9D8C6C1": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "PupperApidogsdogid43152FE7"
+    },
+    "PathPart": "vote",
+    "RestApiId": {
+     "Ref": "PupperApiCF69E181"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/vote/Resource"
+   }
+  },
+  "PupperApidogsdogidvoteOPTIONS266DD892": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "PupperApidogsdogidvoteC9D8C6C1"
+    },
+    "RestApiId": {
+     "Ref": "PupperApiCF69E181"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/vote/OPTIONS/Resource"
+   }
+  },
+  "PupperApidogsdogidvotePOSTApiPermissionPupperBackendStackPupperApiD5F65D83POSTdogsdogidvote40CAA537": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "UpdateDogFunctionACC97248",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "PupperApiCF69E181"
+       },
+       "/",
+       {
+        "Ref": "PupperApiDeploymentStageprod6CE535E3"
+       },
+       "/POST/dogs/*/vote"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/vote/POST/ApiPermission.PupperBackendStackPupperApiD5F65D83.POST..dogs.{dog_id}.vote"
+   }
+  },
+  "PupperApidogsdogidvotePOSTApiPermissionTestPupperBackendStackPupperApiD5F65D83POSTdogsdogidvoteA7909FDB": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "UpdateDogFunctionACC97248",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "PupperApiCF69E181"
+       },
+       "/test-invoke-stage/POST/dogs/*/vote"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/vote/POST/ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.POST..dogs.{dog_id}.vote"
+   }
+  },
+  "PupperApidogsdogidvotePOST30F901C9": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:",
+        {
+         "Ref": "AWS::Region"
+        },
+        ":lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "UpdateDogFunctionACC97248",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "PupperApidogsdogidvoteC9D8C6C1"
+    },
+    "RestApiId": {
+     "Ref": "PupperApiCF69E181"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/vote/POST/Resource"
+   }
+  },
+  "PupperApiimages82FD10B9": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "PupperApiCF69E181",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "images",
+    "RestApiId": {
+     "Ref": "PupperApiCF69E181"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/images/Resource"
+   }
+  },
+  "PupperApiimagesOPTIONS1C292AB9": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "PupperApiimages82FD10B9"
+    },
+    "RestApiId": {
+     "Ref": "PupperApiCF69E181"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/images/OPTIONS/Resource"
+   }
+  },
+  "PupperApiimagesPOSTApiPermissionPupperBackendStackPupperApiD5F65D83POSTimages74E59F20": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ImageUploadFunction1528BFB7",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "PupperApiCF69E181"
+       },
+       "/",
+       {
+        "Ref": "PupperApiDeploymentStageprod6CE535E3"
+       },
+       "/POST/images"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/images/POST/ApiPermission.PupperBackendStackPupperApiD5F65D83.POST..images"
+   }
+  },
+  "PupperApiimagesPOSTApiPermissionTestPupperBackendStackPupperApiD5F65D83POSTimages8EB2BE0C": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ImageUploadFunction1528BFB7",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "PupperApiCF69E181"
+       },
+       "/test-invoke-stage/POST/images"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/images/POST/ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.POST..images"
+   }
+  },
+  "PupperApiimagesPOSTBF806986": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:",
+        {
+         "Ref": "AWS::Region"
+        },
+        ":lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ImageUploadFunction1528BFB7",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "PupperApiimages82FD10B9"
+    },
+    "RestApiId": {
+     "Ref": "PupperApiCF69E181"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/images/POST/Resource"
+   }
+  },
+  "PupperApiimagesimageid333D910B": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "PupperApiimages82FD10B9"
+    },
+    "PathPart": "{image_id}",
+    "RestApiId": {
+     "Ref": "PupperApiCF69E181"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/images/{image_id}/Resource"
+   }
+  },
+  "PupperApiimagesimageidOPTIONS32803738": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "PupperApiimagesimageid333D910B"
+    },
+    "RestApiId": {
+     "Ref": "PupperApiCF69E181"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/images/{image_id}/OPTIONS/Resource"
+   }
+  },
+  "PupperApiimagesimageidGETApiPermissionPupperBackendStackPupperApiD5F65D83GETimagesimageid7F019982": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ImageUploadFunction1528BFB7",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "PupperApiCF69E181"
+       },
+       "/",
+       {
+        "Ref": "PupperApiDeploymentStageprod6CE535E3"
+       },
+       "/GET/images/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/images/{image_id}/GET/ApiPermission.PupperBackendStackPupperApiD5F65D83.GET..images.{image_id}"
+   }
+  },
+  "PupperApiimagesimageidGETApiPermissionTestPupperBackendStackPupperApiD5F65D83GETimagesimageid52536773": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ImageUploadFunction1528BFB7",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "PupperApiCF69E181"
+       },
+       "/test-invoke-stage/GET/images/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/images/{image_id}/GET/ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.GET..images.{image_id}"
+   }
+  },
+  "PupperApiimagesimageidGET1EA4FC2B": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:",
+        {
+         "Ref": "AWS::Region"
+        },
+        ":lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ImageUploadFunction1528BFB7",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "PupperApiimagesimageid333D910B"
+    },
+    "RestApiId": {
+     "Ref": "PupperApiCF69E181"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/PupperApi/Default/images/{image_id}/GET/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/22QwU7DMAyGn2X3NHRUPMBWxA1RDe6Tm5hi2iRVkzBVVd6dNOk0QJz82b/j384935clL3dwsYWQfTFQy5dXB6JnsXRebMWXoxc9Ola/641yaMxAYr6VtzwnR7AY2ACqlcCX2NPgpMhaMpo9eS3cCrF85cDkrEEZGe3foB1wFRMERqD4cjK5luLNOlNgtjqDtegsP6yBwUgdOLzAHJ+idYeR0usNH3EczKxQp7N+ZPH0LvlkiP3GTwLXc9gzug8jV3Gjq7pNThwCq711Rv0n/pGayXyRxImlnVdH0t2vqS/ejT7tWBstKf9UM0d3fVfxfcUfdp+WqJi8dqSQn3L8BgMOnLjWAQAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "PupperBackendStack/CDKMetadata/Default"
+   },
+   "Condition": "CDKMetadataAvailable"
+  }
+ },
+ "Outputs": {
+  "PupperApiEndpoint7D73B7FB": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "PupperApiCF69E181"
+      },
+      ".execute-api.",
+      {
+       "Ref": "AWS::Region"
+      },
+      ".",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "PupperApiDeploymentStageprod6CE535E3"
+      },
+      "/"
+     ]
+    ]
+   }
+  }
+ },
+ "Conditions": {
+  "CDKMetadataAvailable": {
+   "Fn::Or": [
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "af-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ca-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-northwest-1"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-3"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "sa-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-2"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-west-2"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

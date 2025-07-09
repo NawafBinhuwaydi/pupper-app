@@ -1,0 +1,42 @@
+{
+  "frontend": {
+    "bucketName": "pupper-frontend-{account}-{region}",
+    "distributionConfig": {
+      "priceClass": "PriceClass_100",
+      "cachingEnabled": true,
+      "compressionEnabled": true,
+      "httpVersion": "http2",
+      "ipv6Enabled": true
+    },
+    "caching": {
+      "defaultTTL": 86400,
+      "maxTTL": 31536000,
+      "staticAssetsTTL": 31536000,
+      "htmlTTL": 3600
+    },
+    "security": {
+      "httpsOnly": true,
+      "securityHeaders": true,
+      "corsEnabled": true
+    },
+    "customDomain": {
+      "enabled": false,
+      "domainName": "",
+      "certificateArn": "",
+      "hostedZoneId": ""
+    }
+  },
+  "build": {
+    "sourceDirectory": "./frontend/build",
+    "excludePatterns": [
+      "*.map",
+      "*.DS_Store",
+      "node_modules/**"
+    ]
+  },
+  "deployment": {
+    "invalidateCache": true,
+    "pruneOldFiles": true,
+    "retainOnDelete": false
+  }
+}

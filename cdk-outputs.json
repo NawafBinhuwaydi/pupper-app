@@ -1,5 +1,9 @@
 {
-  "PupperCdkStack": {
-    "PupperApiEndpoint7D73B7FB": "https://bj9jbp1rgf.execute-api.us-east-1.amazonaws.com/prod/"
+  "PupperFrontendStack": {
+    "CloudFrontDistributionDomainName": "d3kn4bkzbrab7b.cloudfront.net",
+    "CloudFrontURL": "https://d3kn4bkzbrab7b.cloudfront.net",
+    "FrontendBucketName": "pupper-frontend-380141752789-us-east-1",
+    "FrontendBucketWebsiteURL": "http://pupper-frontend-380141752789-us-east-1.s3-website-us-east-1.amazonaws.com",
+    "CloudFrontDistributionId": "E2GUTFP4C0C5WH"
   }
 }

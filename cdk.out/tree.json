@@ -4,17 +4,17 @@
     "id": "App",
     "path": "",
     "children": {
-      "PupperCdkStack": {
-        "id": "PupperCdkStack",
-        "path": "PupperCdkStack",
+      "PupperBackendStack": {
+        "id": "PupperBackendStack",
+        "path": "PupperBackendStack",
         "children": {
           "PupperImagesBucket": {
             "id": "PupperImagesBucket",
-            "path": "PupperCdkStack/PupperImagesBucket",
+            "path": "PupperBackendStack/PupperImagesBucket",
             "children": {
               "Resource": {
                 "id": "Resource",
-                "path": "PupperCdkStack/PupperImagesBucket/Resource",
+                "path": "PupperBackendStack/PupperImagesBucket/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::S3::Bucket",
                   "aws:cdk:cloudformation:props": {
@@ -37,6 +37,14 @@
                       {
                         "key": "aws-cdk:auto-delete-objects",
                         "value": "true"
+                      },
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "Pupper"
                       }
                     ],
                     "versioningConfiguration": {
@@ -51,11 +59,11 @@
               },
               "Policy": {
                 "id": "Policy",
-                "path": "PupperCdkStack/PupperImagesBucket/Policy",
+                "path": "PupperBackendStack/PupperImagesBucket/Policy",
                 "children": {
                   "Resource": {
                     "id": "Resource",
-                    "path": "PupperCdkStack/PupperImagesBucket/Policy/Resource",
+                    "path": "PupperBackendStack/PupperImagesBucket/Policy/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::S3::BucketPolicy",
                       "aws:cdk:cloudformation:props": {
@@ -121,11 +129,11 @@
               },
               "AutoDeleteObjectsCustomResource": {
                 "id": "AutoDeleteObjectsCustomResource",
-                "path": "PupperCdkStack/PupperImagesBucket/AutoDeleteObjectsCustomResource",
+                "path": "PupperBackendStack/PupperImagesBucket/AutoDeleteObjectsCustomResource",
                 "children": {
                   "Default": {
                     "id": "Default",
-                    "path": "PupperCdkStack/PupperImagesBucket/AutoDeleteObjectsCustomResource/Default",
+                    "path": "PupperBackendStack/PupperImagesBucket/AutoDeleteObjectsCustomResource/Default",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.CfnResource",
                       "version": "2.100.0"
@@ -139,11 +147,11 @@
               },
               "Notifications": {
                 "id": "Notifications",
-                "path": "PupperCdkStack/PupperImagesBucket/Notifications",
+                "path": "PupperBackendStack/PupperImagesBucket/Notifications",
                 "children": {
                   "Resource": {
                     "id": "Resource",
-                    "path": "PupperCdkStack/PupperImagesBucket/Notifications/Resource",
+                    "path": "PupperBackendStack/PupperImagesBucket/Notifications/Resource",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.CfnResource",
                       "version": "2.100.0"
@@ -155,9 +163,9 @@
                   "version": "10.4.2"
                 }
               },
-              "AllowBucketNotificationsToPupperCdkStackImageProcessingFunction909283BC": {
-                "id": "AllowBucketNotificationsToPupperCdkStackImageProcessingFunction909283BC",
-                "path": "PupperCdkStack/PupperImagesBucket/AllowBucketNotificationsToPupperCdkStackImageProcessingFunction909283BC",
+              "AllowBucketNotificationsToPupperBackendStackImageProcessingFunction3ACF3515": {
+                "id": "AllowBucketNotificationsToPupperBackendStackImageProcessingFunction3ACF3515",
+                "path": "PupperBackendStack/PupperImagesBucket/AllowBucketNotificationsToPupperBackendStackImageProcessingFunction3ACF3515",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
                   "aws:cdk:cloudformation:props": {
@@ -193,11 +201,11 @@
           },
           "Custom::S3AutoDeleteObjectsCustomResourceProvider": {
             "id": "Custom::S3AutoDeleteObjectsCustomResourceProvider",
-            "path": "PupperCdkStack/Custom::S3AutoDeleteObjectsCustomResourceProvider",
+            "path": "PupperBackendStack/Custom::S3AutoDeleteObjectsCustomResourceProvider",
             "children": {
               "Staging": {
                 "id": "Staging",
-                "path": "PupperCdkStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Staging",
+                "path": "PupperBackendStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Staging",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.AssetStaging",
                   "version": "2.100.0"
@@ -205,7 +213,7 @@
               },
               "Role": {
                 "id": "Role",
-                "path": "PupperCdkStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role",
+                "path": "PupperBackendStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.CfnResource",
                   "version": "2.100.0"
@@ -213,7 +221,7 @@
               },
               "Handler": {
                 "id": "Handler",
-                "path": "PupperCdkStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
+                "path": "PupperBackendStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.CfnResource",
                   "version": "2.100.0"
@@ -227,11 +235,11 @@
           },
           "DogsTable": {
             "id": "DogsTable",
-            "path": "PupperCdkStack/DogsTable",
+            "path": "PupperBackendStack/DogsTable",
             "children": {
               "Resource": {
                 "id": "Resource",
-                "path": "PupperCdkStack/DogsTable/Resource",
+                "path": "PupperBackendStack/DogsTable/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::DynamoDB::Table",
                   "aws:cdk:cloudformation:props": {
@@ -297,7 +305,17 @@
                     "pointInTimeRecoverySpecification": {
                       "pointInTimeRecoveryEnabled": true
                     },
-                    "tableName": "pupper-dogs"
+                    "tableName": "pupper-dogs",
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "Pupper"
+                      }
+                    ]
                   }
                 },
                 "constructInfo": {
@@ -307,7 +325,7 @@
               },
               "ScalingRole": {
                 "id": "ScalingRole",
-                "path": "PupperCdkStack/DogsTable/ScalingRole",
+                "path": "PupperBackendStack/DogsTable/ScalingRole",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.Resource",
                   "version": "2.100.0"
@@ -321,11 +339,11 @@
           },
           "UsersTable": {
             "id": "UsersTable",
-            "path": "PupperCdkStack/UsersTable",
+            "path": "PupperBackendStack/UsersTable",
             "children": {
               "Resource": {
                 "id": "Resource",
-                "path": "PupperCdkStack/UsersTable/Resource",
+                "path": "PupperBackendStack/UsersTable/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::DynamoDB::Table",
                   "aws:cdk:cloudformation:props": {
@@ -342,7 +360,17 @@
                         "keyType": "HASH"
                       }
                     ],
-                    "tableName": "pupper-users"
+                    "tableName": "pupper-users",
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "Pupper"
+                      }
+                    ]
                   }
                 },
                 "constructInfo": {
@@ -352,7 +380,7 @@
               },
               "ScalingRole": {
                 "id": "ScalingRole",
-                "path": "PupperCdkStack/UsersTable/ScalingRole",
+                "path": "PupperBackendStack/UsersTable/ScalingRole",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.Resource",
                   "version": "2.100.0"
@@ -366,11 +394,11 @@
           },
           "VotesTable": {
             "id": "VotesTable",
-            "path": "PupperCdkStack/VotesTable",
+            "path": "PupperBackendStack/VotesTable",
             "children": {
               "Resource": {
                 "id": "Resource",
-                "path": "PupperCdkStack/VotesTable/Resource",
+                "path": "PupperBackendStack/VotesTable/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::DynamoDB::Table",
                   "aws:cdk:cloudformation:props": {
@@ -417,7 +445,17 @@
                         "keyType": "RANGE"
                       }
                     ],
-                    "tableName": "pupper-votes"
+                    "tableName": "pupper-votes",
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "Pupper"
+                      }
+                    ]
                   }
                 },
                 "constructInfo": {
@@ -427,7 +465,7 @@
               },
               "ScalingRole": {
                 "id": "ScalingRole",
-                "path": "PupperCdkStack/VotesTable/ScalingRole",
+                "path": "PupperBackendStack/VotesTable/ScalingRole",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.Resource",
                   "version": "2.100.0"
@@ -441,11 +479,11 @@
           },
           "SheltersTable": {
             "id": "SheltersTable",
-            "path": "PupperCdkStack/SheltersTable",
+            "path": "PupperBackendStack/SheltersTable",
             "children": {
               "Resource": {
                 "id": "Resource",
-                "path": "PupperCdkStack/SheltersTable/Resource",
+                "path": "PupperBackendStack/SheltersTable/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::DynamoDB::Table",
                   "aws:cdk:cloudformation:props": {
@@ -462,7 +500,17 @@
                         "keyType": "HASH"
                       }
                     ],
-                    "tableName": "pupper-shelters"
+                    "tableName": "pupper-shelters",
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "Pupper"
+                      }
+                    ]
                   }
                 },
                 "constructInfo": {
@@ -472,7 +520,7 @@
               },
               "ScalingRole": {
                 "id": "ScalingRole",
-                "path": "PupperCdkStack/SheltersTable/ScalingRole",
+                "path": "PupperBackendStack/SheltersTable/ScalingRole",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.Resource",
                   "version": "2.100.0"
@@ -486,11 +534,11 @@
           },
           "ImagesTable": {
             "id": "ImagesTable",
-            "path": "PupperCdkStack/ImagesTable",
+            "path": "PupperBackendStack/ImagesTable",
             "children": {
               "Resource": {
                 "id": "Resource",
-                "path": "PupperCdkStack/ImagesTable/Resource",
+                "path": "PupperBackendStack/ImagesTable/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::DynamoDB::Table",
                   "aws:cdk:cloudformation:props": {
@@ -533,7 +581,17 @@
                         "keyType": "HASH"
                       }
                     ],
-                    "tableName": "pupper-images"
+                    "tableName": "pupper-images",
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "Pupper"
+                      }
+                    ]
                   }
                 },
                 "constructInfo": {
@@ -543,7 +601,7 @@
               },
               "ScalingRole": {
                 "id": "ScalingRole",
-                "path": "PupperCdkStack/ImagesTable/ScalingRole",
+                "path": "PupperBackendStack/ImagesTable/ScalingRole",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.Resource",
                   "version": "2.100.0"
@@ -557,11 +615,11 @@
           },
           "PupperLambdaRole": {
             "id": "PupperLambdaRole",
-            "path": "PupperCdkStack/PupperLambdaRole",
+            "path": "PupperBackendStack/PupperLambdaRole",
             "children": {
               "ImportPupperLambdaRole": {
                 "id": "ImportPupperLambdaRole",
-                "path": "PupperCdkStack/PupperLambdaRole/ImportPupperLambdaRole",
+                "path": "PupperBackendStack/PupperLambdaRole/ImportPupperLambdaRole",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.Resource",
                   "version": "2.100.0"
@@ -569,7 +627,7 @@
               },
               "Resource": {
                 "id": "Resource",
-                "path": "PupperCdkStack/PupperLambdaRole/Resource",
+                "path": "PupperBackendStack/PupperLambdaRole/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::IAM::Role",
                   "aws:cdk:cloudformation:props": {
@@ -698,6 +756,16 @@
                           "Version": "2012-10-17"
                         }
                       }
+                    ],
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "Pupper"
+                      }
                     ]
                   }
                 },
@@ -708,11 +776,11 @@
               },
               "DefaultPolicy": {
                 "id": "DefaultPolicy",
-                "path": "PupperCdkStack/PupperLambdaRole/DefaultPolicy",
+                "path": "PupperBackendStack/PupperLambdaRole/DefaultPolicy",
                 "children": {
                   "Resource": {
                     "id": "Resource",
-                    "path": "PupperCdkStack/PupperLambdaRole/DefaultPolicy/Resource",
+                    "path": "PupperBackendStack/PupperLambdaRole/DefaultPolicy/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
                       "aws:cdk:cloudformation:props": {
@@ -756,15 +824,15 @@
           },
           "CreateDogFunction": {
             "id": "CreateDogFunction",
-            "path": "PupperCdkStack/CreateDogFunction",
+            "path": "PupperBackendStack/CreateDogFunction",
             "children": {
               "Code": {
                 "id": "Code",
-                "path": "PupperCdkStack/CreateDogFunction/Code",
+                "path": "PupperBackendStack/CreateDogFunction/Code",
                 "children": {
                   "Stage": {
                     "id": "Stage",
-                    "path": "PupperCdkStack/CreateDogFunction/Code/Stage",
+                    "path": "PupperBackendStack/CreateDogFunction/Code/Stage",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.AssetStaging",
                       "version": "2.100.0"
@@ -772,7 +840,7 @@
                   },
                   "AssetBucket": {
                     "id": "AssetBucket",
-                    "path": "PupperCdkStack/CreateDogFunction/Code/AssetBucket",
+                    "path": "PupperBackendStack/CreateDogFunction/Code/AssetBucket",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.aws_s3.BucketBase",
                       "version": "2.100.0"
@@ -786,7 +854,7 @@
               },
               "Resource": {
                 "id": "Resource",
-                "path": "PupperCdkStack/CreateDogFunction/Resource",
+                "path": "PupperBackendStack/CreateDogFunction/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
                   "aws:cdk:cloudformation:props": {
@@ -822,6 +890,16 @@
                       ]
                     },
                     "runtime": "python3.9",
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "Pupper"
+                      }
+                    ],
                     "timeout": 30,
                     "tracingConfig": {
                       "mode": "Active"
@@ -841,15 +919,15 @@
           },
           "ReadDogFunction": {
             "id": "ReadDogFunction",
-            "path": "PupperCdkStack/ReadDogFunction",
+            "path": "PupperBackendStack/ReadDogFunction",
             "children": {
               "Code": {
                 "id": "Code",
-                "path": "PupperCdkStack/ReadDogFunction/Code",
+                "path": "PupperBackendStack/ReadDogFunction/Code",
                 "children": {
                   "Stage": {
                     "id": "Stage",
-                    "path": "PupperCdkStack/ReadDogFunction/Code/Stage",
+                    "path": "PupperBackendStack/ReadDogFunction/Code/Stage",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.AssetStaging",
                       "version": "2.100.0"
@@ -857,7 +935,7 @@
                   },
                   "AssetBucket": {
                     "id": "AssetBucket",
-                    "path": "PupperCdkStack/ReadDogFunction/Code/AssetBucket",
+                    "path": "PupperBackendStack/ReadDogFunction/Code/AssetBucket",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.aws_s3.BucketBase",
                       "version": "2.100.0"
@@ -871,7 +949,7 @@
               },
               "Resource": {
                 "id": "Resource",
-                "path": "PupperCdkStack/ReadDogFunction/Resource",
+                "path": "PupperBackendStack/ReadDogFunction/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
                   "aws:cdk:cloudformation:props": {
@@ -901,6 +979,16 @@
                       ]
                     },
                     "runtime": "python3.9",
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "Pupper"
+                      }
+                    ],
                     "timeout": 30,
                     "tracingConfig": {
                       "mode": "Active"
@@ -920,15 +1008,15 @@
           },
           "UpdateDogFunction": {
             "id": "UpdateDogFunction",
-            "path": "PupperCdkStack/UpdateDogFunction",
+            "path": "PupperBackendStack/UpdateDogFunction",
             "children": {
               "Code": {
                 "id": "Code",
-                "path": "PupperCdkStack/UpdateDogFunction/Code",
+                "path": "PupperBackendStack/UpdateDogFunction/Code",
                 "children": {
                   "Stage": {
                     "id": "Stage",
-                    "path": "PupperCdkStack/UpdateDogFunction/Code/Stage",
+                    "path": "PupperBackendStack/UpdateDogFunction/Code/Stage",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.AssetStaging",
                       "version": "2.100.0"
@@ -936,7 +1024,7 @@
                   },
                   "AssetBucket": {
                     "id": "AssetBucket",
-                    "path": "PupperCdkStack/UpdateDogFunction/Code/AssetBucket",
+                    "path": "PupperBackendStack/UpdateDogFunction/Code/AssetBucket",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.aws_s3.BucketBase",
                       "version": "2.100.0"
@@ -950,7 +1038,7 @@
               },
               "Resource": {
                 "id": "Resource",
-                "path": "PupperCdkStack/UpdateDogFunction/Resource",
+                "path": "PupperBackendStack/UpdateDogFunction/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
                   "aws:cdk:cloudformation:props": {
@@ -983,6 +1071,16 @@
                       ]
                     },
                     "runtime": "python3.9",
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "Pupper"
+                      }
+                    ],
                     "timeout": 30,
                     "tracingConfig": {
                       "mode": "Active"
@@ -1002,15 +1100,15 @@
           },
           "DeleteDogFunction": {
             "id": "DeleteDogFunction",
-            "path": "PupperCdkStack/DeleteDogFunction",
+            "path": "PupperBackendStack/DeleteDogFunction",
             "children": {
               "Code": {
                 "id": "Code",
-                "path": "PupperCdkStack/DeleteDogFunction/Code",
+                "path": "PupperBackendStack/DeleteDogFunction/Code",
                 "children": {
                   "Stage": {
                     "id": "Stage",
-                    "path": "PupperCdkStack/DeleteDogFunction/Code/Stage",
+                    "path": "PupperBackendStack/DeleteDogFunction/Code/Stage",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.AssetStaging",
                       "version": "2.100.0"
@@ -1018,7 +1116,7 @@
                   },
                   "AssetBucket": {
                     "id": "AssetBucket",
-                    "path": "PupperCdkStack/DeleteDogFunction/Code/AssetBucket",
+                    "path": "PupperBackendStack/DeleteDogFunction/Code/AssetBucket",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.aws_s3.BucketBase",
                       "version": "2.100.0"
@@ -1032,7 +1130,7 @@
               },
               "Resource": {
                 "id": "Resource",
-                "path": "PupperCdkStack/DeleteDogFunction/Resource",
+                "path": "PupperBackendStack/DeleteDogFunction/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
                   "aws:cdk:cloudformation:props": {
@@ -1062,6 +1160,16 @@
                       ]
                     },
                     "runtime": "python3.9",
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "Pupper"
+                      }
+                    ],
                     "timeout": 30,
                     "tracingConfig": {
                       "mode": "Active"
@@ -1081,15 +1189,15 @@
           },
           "ImageUploadFunction": {
             "id": "ImageUploadFunction",
-            "path": "PupperCdkStack/ImageUploadFunction",
+            "path": "PupperBackendStack/ImageUploadFunction",
             "children": {
               "Code": {
                 "id": "Code",
-                "path": "PupperCdkStack/ImageUploadFunction/Code",
+                "path": "PupperBackendStack/ImageUploadFunction/Code",
                 "children": {
                   "Stage": {
                     "id": "Stage",
-                    "path": "PupperCdkStack/ImageUploadFunction/Code/Stage",
+                    "path": "PupperBackendStack/ImageUploadFunction/Code/Stage",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.AssetStaging",
                       "version": "2.100.0"
@@ -1097,7 +1205,7 @@
                   },
                   "AssetBucket": {
                     "id": "AssetBucket",
-                    "path": "PupperCdkStack/ImageUploadFunction/Code/AssetBucket",
+                    "path": "PupperBackendStack/ImageUploadFunction/Code/AssetBucket",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.aws_s3.BucketBase",
                       "version": "2.100.0"
@@ -1111,7 +1219,7 @@
               },
               "Resource": {
                 "id": "Resource",
-                "path": "PupperCdkStack/ImageUploadFunction/Resource",
+                "path": "PupperBackendStack/ImageUploadFunction/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
                   "aws:cdk:cloudformation:props": {
@@ -1144,6 +1252,16 @@
                       ]
                     },
                     "runtime": "python3.9",
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "Pupper"
+                      }
+                    ],
                     "timeout": 60,
                     "tracingConfig": {
                       "mode": "Active"
@@ -1163,15 +1281,15 @@
           },
           "ImageProcessingFunction": {
             "id": "ImageProcessingFunction",
-            "path": "PupperCdkStack/ImageProcessingFunction",
+            "path": "PupperBackendStack/ImageProcessingFunction",
             "children": {
               "Code": {
                 "id": "Code",
-                "path": "PupperCdkStack/ImageProcessingFunction/Code",
+                "path": "PupperBackendStack/ImageProcessingFunction/Code",
                 "children": {
                   "Stage": {
                     "id": "Stage",
-                    "path": "PupperCdkStack/ImageProcessingFunction/Code/Stage",
+                    "path": "PupperBackendStack/ImageProcessingFunction/Code/Stage",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.AssetStaging",
                       "version": "2.100.0"
@@ -1179,7 +1297,7 @@
                   },
                   "AssetBucket": {
                     "id": "AssetBucket",
-                    "path": "PupperCdkStack/ImageProcessingFunction/Code/AssetBucket",
+                    "path": "PupperBackendStack/ImageProcessingFunction/Code/AssetBucket",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.aws_s3.BucketBase",
                       "version": "2.100.0"
@@ -1193,7 +1311,7 @@
               },
               "Resource": {
                 "id": "Resource",
-                "path": "PupperCdkStack/ImageProcessingFunction/Resource",
+                "path": "PupperBackendStack/ImageProcessingFunction/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
                   "aws:cdk:cloudformation:props": {
@@ -1229,6 +1347,16 @@
                       ]
                     },
                     "runtime": "python3.9",
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "Pupper"
+                      }
+                    ],
                     "timeout": 300,
                     "tracingConfig": {
                       "mode": "Active"
@@ -1248,15 +1376,15 @@
           },
           "BucketNotificationsHandler050a0587b7544547bf325f094a3db834": {
             "id": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834",
-            "path": "PupperCdkStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834",
+            "path": "PupperBackendStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834",
             "children": {
               "Role": {
                 "id": "Role",
-                "path": "PupperCdkStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role",
+                "path": "PupperBackendStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role",
                 "children": {
                   "ImportRole": {
                     "id": "ImportRole",
-                    "path": "PupperCdkStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/ImportRole",
+                    "path": "PupperBackendStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/ImportRole",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.Resource",
                       "version": "2.100.0"
@@ -1264,7 +1392,7 @@
                   },
                   "Resource": {
                     "id": "Resource",
-                    "path": "PupperCdkStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/Resource",
+                    "path": "PupperBackendStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::IAM::Role",
                       "aws:cdk:cloudformation:props": {
@@ -1293,6 +1421,16 @@
                               ]
                             ]
                           }
+                        ],
+                        "tags": [
+                          {
+                            "key": "Environment",
+                            "value": "Production"
+                          },
+                          {
+                            "key": "Project",
+                            "value": "Pupper"
+                          }
                         ]
                       }
                     },
@@ -1303,11 +1441,11 @@
                   },
                   "DefaultPolicy": {
                     "id": "DefaultPolicy",
-                    "path": "PupperCdkStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/DefaultPolicy",
+                    "path": "PupperBackendStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/DefaultPolicy",
                     "children": {
                       "Resource": {
                         "id": "Resource",
-                        "path": "PupperCdkStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/DefaultPolicy/Resource",
+                        "path": "PupperBackendStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/DefaultPolicy/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
                           "aws:cdk:cloudformation:props": {
@@ -1348,7 +1486,7 @@
               },
               "Resource": {
                 "id": "Resource",
-                "path": "PupperCdkStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Resource",
+                "path": "PupperBackendStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Resource",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.CfnResource",
                   "version": "2.100.0"
@@ -1362,16 +1500,26 @@
           },
           "PupperApi": {
             "id": "PupperApi",
-            "path": "PupperCdkStack/PupperApi",
+            "path": "PupperBackendStack/PupperApi",
             "children": {
               "Resource": {
                 "id": "Resource",
-                "path": "PupperCdkStack/PupperApi/Resource",
+                "path": "PupperBackendStack/PupperApi/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::ApiGateway::RestApi",
                   "aws:cdk:cloudformation:props": {
                     "description": "API for Pupper dog adoption app",
-                    "name": "Pupper API"
+                    "name": "Pupper API",
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "Pupper"
+                      }
+                    ]
                   }
                 },
                 "constructInfo": {
@@ -1381,11 +1529,11 @@
               },
               "Deployment": {
                 "id": "Deployment",
-                "path": "PupperCdkStack/PupperApi/Deployment",
+                "path": "PupperBackendStack/PupperApi/Deployment",
                 "children": {
                   "Resource": {
                     "id": "Resource",
-                    "path": "PupperCdkStack/PupperApi/Deployment/Resource",
+                    "path": "PupperBackendStack/PupperApi/Deployment/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::ApiGateway::Deployment",
                       "aws:cdk:cloudformation:props": {
@@ -1408,21 +1556,31 @@
               },
               "DeploymentStage.prod": {
                 "id": "DeploymentStage.prod",
-                "path": "PupperCdkStack/PupperApi/DeploymentStage.prod",
+                "path": "PupperBackendStack/PupperApi/DeploymentStage.prod",
                 "children": {
                   "Resource": {
                     "id": "Resource",
-                    "path": "PupperCdkStack/PupperApi/DeploymentStage.prod/Resource",
+                    "path": "PupperBackendStack/PupperApi/DeploymentStage.prod/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::ApiGateway::Stage",
                       "aws:cdk:cloudformation:props": {
                         "deploymentId": {
-                          "Ref": "PupperApiDeployment714C7E7Cfed1f9a1a606fe38cc3754496fe9bd9b"
+                          "Ref": "PupperApiDeployment714C7E7Cd7023f1044eddb6c06bdb21d9c7389f2"
                         },
                         "restApiId": {
                           "Ref": "PupperApiCF69E181"
                         },
-                        "stageName": "prod"
+                        "stageName": "prod",
+                        "tags": [
+                          {
+                            "key": "Environment",
+                            "value": "Production"
+                          },
+                          {
+                            "key": "Project",
+                            "value": "Pupper"
+                          }
+                        ]
                       }
                     },
                     "constructInfo": {
@@ -1438,7 +1596,7 @@
               },
               "Endpoint": {
                 "id": "Endpoint",
-                "path": "PupperCdkStack/PupperApi/Endpoint",
+                "path": "PupperBackendStack/PupperApi/Endpoint",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.CfnOutput",
                   "version": "2.100.0"
@@ -1446,15 +1604,15 @@
               },
               "Default": {
                 "id": "Default",
-                "path": "PupperCdkStack/PupperApi/Default",
+                "path": "PupperBackendStack/PupperApi/Default",
                 "children": {
                   "OPTIONS": {
                     "id": "OPTIONS",
-                    "path": "PupperCdkStack/PupperApi/Default/OPTIONS",
+                    "path": "PupperBackendStack/PupperApi/Default/OPTIONS",
                     "children": {
                       "Resource": {
                         "id": "Resource",
-                        "path": "PupperCdkStack/PupperApi/Default/OPTIONS/Resource",
+                        "path": "PupperBackendStack/PupperApi/Default/OPTIONS/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
                           "aws:cdk:cloudformation:props": {
@@ -1511,11 +1669,11 @@
                   },
                   "dogs": {
                     "id": "dogs",
-                    "path": "PupperCdkStack/PupperApi/Default/dogs",
+                    "path": "PupperBackendStack/PupperApi/Default/dogs",
                     "children": {
                       "Resource": {
                         "id": "Resource",
-                        "path": "PupperCdkStack/PupperApi/Default/dogs/Resource",
+                        "path": "PupperBackendStack/PupperApi/Default/dogs/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
                           "aws:cdk:cloudformation:props": {
@@ -1538,11 +1696,11 @@
                       },
                       "OPTIONS": {
                         "id": "OPTIONS",
-                        "path": "PupperCdkStack/PupperApi/Default/dogs/OPTIONS",
+                        "path": "PupperBackendStack/PupperApi/Default/dogs/OPTIONS",
                         "children": {
                           "Resource": {
                             "id": "Resource",
-                            "path": "PupperCdkStack/PupperApi/Default/dogs/OPTIONS/Resource",
+                            "path": "PupperBackendStack/PupperApi/Default/dogs/OPTIONS/Resource",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
                               "aws:cdk:cloudformation:props": {
@@ -1596,11 +1754,11 @@
                       },
                       "POST": {
                         "id": "POST",
-                        "path": "PupperCdkStack/PupperApi/Default/dogs/POST",
+                        "path": "PupperBackendStack/PupperApi/Default/dogs/POST",
                         "children": {
-                          "ApiPermission.PupperCdkStackPupperApiF6D14D0C.POST..dogs": {
-                            "id": "ApiPermission.PupperCdkStackPupperApiF6D14D0C.POST..dogs",
-                            "path": "PupperCdkStack/PupperApi/Default/dogs/POST/ApiPermission.PupperCdkStackPupperApiF6D14D0C.POST..dogs",
+                          "ApiPermission.PupperBackendStackPupperApiD5F65D83.POST..dogs": {
+                            "id": "ApiPermission.PupperBackendStackPupperApiD5F65D83.POST..dogs",
+                            "path": "PupperBackendStack/PupperApi/Default/dogs/POST/ApiPermission.PupperBackendStackPupperApiD5F65D83.POST..dogs",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
                               "aws:cdk:cloudformation:props": {
@@ -1647,9 +1805,9 @@
                               "version": "2.100.0"
                             }
                           },
-                          "ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.POST..dogs": {
-                            "id": "ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.POST..dogs",
-                            "path": "PupperCdkStack/PupperApi/Default/dogs/POST/ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.POST..dogs",
+                          "ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.POST..dogs": {
+                            "id": "ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.POST..dogs",
+                            "path": "PupperBackendStack/PupperApi/Default/dogs/POST/ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.POST..dogs",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
                               "aws:cdk:cloudformation:props": {
@@ -1694,7 +1852,7 @@
                           },
                           "Resource": {
                             "id": "Resource",
-                            "path": "PupperCdkStack/PupperApi/Default/dogs/POST/Resource",
+                            "path": "PupperBackendStack/PupperApi/Default/dogs/POST/Resource",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
                               "aws:cdk:cloudformation:props": {
@@ -1748,11 +1906,11 @@
                       },
                       "GET": {
                         "id": "GET",
-                        "path": "PupperCdkStack/PupperApi/Default/dogs/GET",
+                        "path": "PupperBackendStack/PupperApi/Default/dogs/GET",
                         "children": {
-                          "ApiPermission.PupperCdkStackPupperApiF6D14D0C.GET..dogs": {
-                            "id": "ApiPermission.PupperCdkStackPupperApiF6D14D0C.GET..dogs",
-                            "path": "PupperCdkStack/PupperApi/Default/dogs/GET/ApiPermission.PupperCdkStackPupperApiF6D14D0C.GET..dogs",
+                          "ApiPermission.PupperBackendStackPupperApiD5F65D83.GET..dogs": {
+                            "id": "ApiPermission.PupperBackendStackPupperApiD5F65D83.GET..dogs",
+                            "path": "PupperBackendStack/PupperApi/Default/dogs/GET/ApiPermission.PupperBackendStackPupperApiD5F65D83.GET..dogs",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
                               "aws:cdk:cloudformation:props": {
@@ -1799,9 +1957,9 @@
                               "version": "2.100.0"
                             }
                           },
-                          "ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.GET..dogs": {
-                            "id": "ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.GET..dogs",
-                            "path": "PupperCdkStack/PupperApi/Default/dogs/GET/ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.GET..dogs",
+                          "ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.GET..dogs": {
+                            "id": "ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.GET..dogs",
+                            "path": "PupperBackendStack/PupperApi/Default/dogs/GET/ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.GET..dogs",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
                               "aws:cdk:cloudformation:props": {
@@ -1846,7 +2004,7 @@
                           },
                           "Resource": {
                             "id": "Resource",
-                            "path": "PupperCdkStack/PupperApi/Default/dogs/GET/Resource",
+                            "path": "PupperBackendStack/PupperApi/Default/dogs/GET/Resource",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
                               "aws:cdk:cloudformation:props": {
@@ -1900,11 +2058,11 @@
                       },
                       "{dog_id}": {
                         "id": "{dog_id}",
-                        "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}",
+                        "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}",
                         "children": {
                           "Resource": {
                             "id": "Resource",
-                            "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}/Resource",
+                            "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/Resource",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
                               "aws:cdk:cloudformation:props": {
@@ -1924,11 +2082,11 @@
                           },
                           "OPTIONS": {
                             "id": "OPTIONS",
-                            "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}/OPTIONS",
+                            "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/OPTIONS",
                             "children": {
                               "Resource": {
                                 "id": "Resource",
-                                "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}/OPTIONS/Resource",
+                                "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/OPTIONS/Resource",
                                 "attributes": {
                                   "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
                                   "aws:cdk:cloudformation:props": {
@@ -1982,11 +2140,11 @@
                           },
                           "GET": {
                             "id": "GET",
-                            "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}/GET",
+                            "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/GET",
                             "children": {
-                              "ApiPermission.PupperCdkStackPupperApiF6D14D0C.GET..dogs.{dog_id}": {
-                                "id": "ApiPermission.PupperCdkStackPupperApiF6D14D0C.GET..dogs.{dog_id}",
-                                "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}/GET/ApiPermission.PupperCdkStackPupperApiF6D14D0C.GET..dogs.{dog_id}",
+                              "ApiPermission.PupperBackendStackPupperApiD5F65D83.GET..dogs.{dog_id}": {
+                                "id": "ApiPermission.PupperBackendStackPupperApiD5F65D83.GET..dogs.{dog_id}",
+                                "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/GET/ApiPermission.PupperBackendStackPupperApiD5F65D83.GET..dogs.{dog_id}",
                                 "attributes": {
                                   "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
                                   "aws:cdk:cloudformation:props": {
@@ -2033,9 +2191,9 @@
                                   "version": "2.100.0"
                                 }
                               },
-                              "ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.GET..dogs.{dog_id}": {
-                                "id": "ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.GET..dogs.{dog_id}",
-                                "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}/GET/ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.GET..dogs.{dog_id}",
+                              "ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.GET..dogs.{dog_id}": {
+                                "id": "ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.GET..dogs.{dog_id}",
+                                "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/GET/ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.GET..dogs.{dog_id}",
                                 "attributes": {
                                   "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
                                   "aws:cdk:cloudformation:props": {
@@ -2080,7 +2238,7 @@
                               },
                               "Resource": {
                                 "id": "Resource",
-                                "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}/GET/Resource",
+                                "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/GET/Resource",
                                 "attributes": {
                                   "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
                                   "aws:cdk:cloudformation:props": {
@@ -2134,11 +2292,11 @@
                           },
                           "PUT": {
                             "id": "PUT",
-                            "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}/PUT",
+                            "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/PUT",
                             "children": {
-                              "ApiPermission.PupperCdkStackPupperApiF6D14D0C.PUT..dogs.{dog_id}": {
-                                "id": "ApiPermission.PupperCdkStackPupperApiF6D14D0C.PUT..dogs.{dog_id}",
-                                "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}/PUT/ApiPermission.PupperCdkStackPupperApiF6D14D0C.PUT..dogs.{dog_id}",
+                              "ApiPermission.PupperBackendStackPupperApiD5F65D83.PUT..dogs.{dog_id}": {
+                                "id": "ApiPermission.PupperBackendStackPupperApiD5F65D83.PUT..dogs.{dog_id}",
+                                "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/PUT/ApiPermission.PupperBackendStackPupperApiD5F65D83.PUT..dogs.{dog_id}",
                                 "attributes": {
                                   "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
                                   "aws:cdk:cloudformation:props": {
@@ -2185,9 +2343,9 @@
                                   "version": "2.100.0"
                                 }
                               },
-                              "ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.PUT..dogs.{dog_id}": {
-                                "id": "ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.PUT..dogs.{dog_id}",
-                                "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}/PUT/ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.PUT..dogs.{dog_id}",
+                              "ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.PUT..dogs.{dog_id}": {
+                                "id": "ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.PUT..dogs.{dog_id}",
+                                "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/PUT/ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.PUT..dogs.{dog_id}",
                                 "attributes": {
                                   "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
                                   "aws:cdk:cloudformation:props": {
@@ -2232,7 +2390,7 @@
                               },
                               "Resource": {
                                 "id": "Resource",
-                                "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}/PUT/Resource",
+                                "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/PUT/Resource",
                                 "attributes": {
                                   "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
                                   "aws:cdk:cloudformation:props": {
@@ -2286,11 +2444,11 @@
                           },
                           "DELETE": {
                             "id": "DELETE",
-                            "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}/DELETE",
+                            "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/DELETE",
                             "children": {
-                              "ApiPermission.PupperCdkStackPupperApiF6D14D0C.DELETE..dogs.{dog_id}": {
-                                "id": "ApiPermission.PupperCdkStackPupperApiF6D14D0C.DELETE..dogs.{dog_id}",
-                                "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}/DELETE/ApiPermission.PupperCdkStackPupperApiF6D14D0C.DELETE..dogs.{dog_id}",
+                              "ApiPermission.PupperBackendStackPupperApiD5F65D83.DELETE..dogs.{dog_id}": {
+                                "id": "ApiPermission.PupperBackendStackPupperApiD5F65D83.DELETE..dogs.{dog_id}",
+                                "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/DELETE/ApiPermission.PupperBackendStackPupperApiD5F65D83.DELETE..dogs.{dog_id}",
                                 "attributes": {
                                   "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
                                   "aws:cdk:cloudformation:props": {
@@ -2337,9 +2495,9 @@
                                   "version": "2.100.0"
                                 }
                               },
-                              "ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.DELETE..dogs.{dog_id}": {
-                                "id": "ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.DELETE..dogs.{dog_id}",
-                                "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}/DELETE/ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.DELETE..dogs.{dog_id}",
+                              "ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.DELETE..dogs.{dog_id}": {
+                                "id": "ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.DELETE..dogs.{dog_id}",
+                                "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/DELETE/ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.DELETE..dogs.{dog_id}",
                                 "attributes": {
                                   "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
                                   "aws:cdk:cloudformation:props": {
@@ -2384,7 +2542,7 @@
                               },
                               "Resource": {
                                 "id": "Resource",
-                                "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}/DELETE/Resource",
+                                "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/DELETE/Resource",
                                 "attributes": {
                                   "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
                                   "aws:cdk:cloudformation:props": {
@@ -2438,11 +2596,11 @@
                           },
                           "vote": {
                             "id": "vote",
-                            "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}/vote",
+                            "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/vote",
                             "children": {
                               "Resource": {
                                 "id": "Resource",
-                                "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}/vote/Resource",
+                                "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/vote/Resource",
                                 "attributes": {
                                   "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
                                   "aws:cdk:cloudformation:props": {
@@ -2462,11 +2620,11 @@
                               },
                               "OPTIONS": {
                                 "id": "OPTIONS",
-                                "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}/vote/OPTIONS",
+                                "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/vote/OPTIONS",
                                 "children": {
                                   "Resource": {
                                     "id": "Resource",
-                                    "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}/vote/OPTIONS/Resource",
+                                    "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/vote/OPTIONS/Resource",
                                     "attributes": {
                                       "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
                                       "aws:cdk:cloudformation:props": {
@@ -2520,11 +2678,11 @@
                               },
                               "POST": {
                                 "id": "POST",
-                                "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}/vote/POST",
+                                "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/vote/POST",
                                 "children": {
-                                  "ApiPermission.PupperCdkStackPupperApiF6D14D0C.POST..dogs.{dog_id}.vote": {
-                                    "id": "ApiPermission.PupperCdkStackPupperApiF6D14D0C.POST..dogs.{dog_id}.vote",
-                                    "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}/vote/POST/ApiPermission.PupperCdkStackPupperApiF6D14D0C.POST..dogs.{dog_id}.vote",
+                                  "ApiPermission.PupperBackendStackPupperApiD5F65D83.POST..dogs.{dog_id}.vote": {
+                                    "id": "ApiPermission.PupperBackendStackPupperApiD5F65D83.POST..dogs.{dog_id}.vote",
+                                    "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/vote/POST/ApiPermission.PupperBackendStackPupperApiD5F65D83.POST..dogs.{dog_id}.vote",
                                     "attributes": {
                                       "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
                                       "aws:cdk:cloudformation:props": {
@@ -2571,9 +2729,9 @@
                                       "version": "2.100.0"
                                     }
                                   },
-                                  "ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.POST..dogs.{dog_id}.vote": {
-                                    "id": "ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.POST..dogs.{dog_id}.vote",
-                                    "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}/vote/POST/ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.POST..dogs.{dog_id}.vote",
+                                  "ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.POST..dogs.{dog_id}.vote": {
+                                    "id": "ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.POST..dogs.{dog_id}.vote",
+                                    "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/vote/POST/ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.POST..dogs.{dog_id}.vote",
                                     "attributes": {
                                       "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
                                       "aws:cdk:cloudformation:props": {
@@ -2618,7 +2776,7 @@
                                   },
                                   "Resource": {
                                     "id": "Resource",
-                                    "path": "PupperCdkStack/PupperApi/Default/dogs/{dog_id}/vote/POST/Resource",
+                                    "path": "PupperBackendStack/PupperApi/Default/dogs/{dog_id}/vote/POST/Resource",
                                     "attributes": {
                                       "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
                                       "aws:cdk:cloudformation:props": {
@@ -2690,11 +2848,11 @@
                   },
                   "images": {
                     "id": "images",
-                    "path": "PupperCdkStack/PupperApi/Default/images",
+                    "path": "PupperBackendStack/PupperApi/Default/images",
                     "children": {
                       "Resource": {
                         "id": "Resource",
-                        "path": "PupperCdkStack/PupperApi/Default/images/Resource",
+                        "path": "PupperBackendStack/PupperApi/Default/images/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
                           "aws:cdk:cloudformation:props": {
@@ -2717,11 +2875,11 @@
                       },
                       "OPTIONS": {
                         "id": "OPTIONS",
-                        "path": "PupperCdkStack/PupperApi/Default/images/OPTIONS",
+                        "path": "PupperBackendStack/PupperApi/Default/images/OPTIONS",
                         "children": {
                           "Resource": {
                             "id": "Resource",
-                            "path": "PupperCdkStack/PupperApi/Default/images/OPTIONS/Resource",
+                            "path": "PupperBackendStack/PupperApi/Default/images/OPTIONS/Resource",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
                               "aws:cdk:cloudformation:props": {
@@ -2775,11 +2933,11 @@
                       },
                       "POST": {
                         "id": "POST",
-                        "path": "PupperCdkStack/PupperApi/Default/images/POST",
+                        "path": "PupperBackendStack/PupperApi/Default/images/POST",
                         "children": {
-                          "ApiPermission.PupperCdkStackPupperApiF6D14D0C.POST..images": {
-                            "id": "ApiPermission.PupperCdkStackPupperApiF6D14D0C.POST..images",
-                            "path": "PupperCdkStack/PupperApi/Default/images/POST/ApiPermission.PupperCdkStackPupperApiF6D14D0C.POST..images",
+                          "ApiPermission.PupperBackendStackPupperApiD5F65D83.POST..images": {
+                            "id": "ApiPermission.PupperBackendStackPupperApiD5F65D83.POST..images",
+                            "path": "PupperBackendStack/PupperApi/Default/images/POST/ApiPermission.PupperBackendStackPupperApiD5F65D83.POST..images",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
                               "aws:cdk:cloudformation:props": {
@@ -2826,9 +2984,9 @@
                               "version": "2.100.0"
                             }
                           },
-                          "ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.POST..images": {
-                            "id": "ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.POST..images",
-                            "path": "PupperCdkStack/PupperApi/Default/images/POST/ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.POST..images",
+                          "ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.POST..images": {
+                            "id": "ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.POST..images",
+                            "path": "PupperBackendStack/PupperApi/Default/images/POST/ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.POST..images",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
                               "aws:cdk:cloudformation:props": {
@@ -2873,7 +3031,7 @@
                           },
                           "Resource": {
                             "id": "Resource",
-                            "path": "PupperCdkStack/PupperApi/Default/images/POST/Resource",
+                            "path": "PupperBackendStack/PupperApi/Default/images/POST/Resource",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
                               "aws:cdk:cloudformation:props": {
@@ -2927,11 +3085,11 @@
                       },
                       "{image_id}": {
                         "id": "{image_id}",
-                        "path": "PupperCdkStack/PupperApi/Default/images/{image_id}",
+                        "path": "PupperBackendStack/PupperApi/Default/images/{image_id}",
                         "children": {
                           "Resource": {
                             "id": "Resource",
-                            "path": "PupperCdkStack/PupperApi/Default/images/{image_id}/Resource",
+                            "path": "PupperBackendStack/PupperApi/Default/images/{image_id}/Resource",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
                               "aws:cdk:cloudformation:props": {
@@ -2951,11 +3109,11 @@
                           },
                           "OPTIONS": {
                             "id": "OPTIONS",
-                            "path": "PupperCdkStack/PupperApi/Default/images/{image_id}/OPTIONS",
+                            "path": "PupperBackendStack/PupperApi/Default/images/{image_id}/OPTIONS",
                             "children": {
                               "Resource": {
                                 "id": "Resource",
-                                "path": "PupperCdkStack/PupperApi/Default/images/{image_id}/OPTIONS/Resource",
+                                "path": "PupperBackendStack/PupperApi/Default/images/{image_id}/OPTIONS/Resource",
                                 "attributes": {
                                   "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
                                   "aws:cdk:cloudformation:props": {
@@ -3009,11 +3167,11 @@
                           },
                           "GET": {
                             "id": "GET",
-                            "path": "PupperCdkStack/PupperApi/Default/images/{image_id}/GET",
+                            "path": "PupperBackendStack/PupperApi/Default/images/{image_id}/GET",
                             "children": {
-                              "ApiPermission.PupperCdkStackPupperApiF6D14D0C.GET..images.{image_id}": {
-                                "id": "ApiPermission.PupperCdkStackPupperApiF6D14D0C.GET..images.{image_id}",
-                                "path": "PupperCdkStack/PupperApi/Default/images/{image_id}/GET/ApiPermission.PupperCdkStackPupperApiF6D14D0C.GET..images.{image_id}",
+                              "ApiPermission.PupperBackendStackPupperApiD5F65D83.GET..images.{image_id}": {
+                                "id": "ApiPermission.PupperBackendStackPupperApiD5F65D83.GET..images.{image_id}",
+                                "path": "PupperBackendStack/PupperApi/Default/images/{image_id}/GET/ApiPermission.PupperBackendStackPupperApiD5F65D83.GET..images.{image_id}",
                                 "attributes": {
                                   "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
                                   "aws:cdk:cloudformation:props": {
@@ -3060,9 +3218,9 @@
                                   "version": "2.100.0"
                                 }
                               },
-                              "ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.GET..images.{image_id}": {
-                                "id": "ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.GET..images.{image_id}",
-                                "path": "PupperCdkStack/PupperApi/Default/images/{image_id}/GET/ApiPermission.Test.PupperCdkStackPupperApiF6D14D0C.GET..images.{image_id}",
+                              "ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.GET..images.{image_id}": {
+                                "id": "ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.GET..images.{image_id}",
+                                "path": "PupperBackendStack/PupperApi/Default/images/{image_id}/GET/ApiPermission.Test.PupperBackendStackPupperApiD5F65D83.GET..images.{image_id}",
                                 "attributes": {
                                   "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
                                   "aws:cdk:cloudformation:props": {
@@ -3107,7 +3265,7 @@
                               },
                               "Resource": {
                                 "id": "Resource",
-                                "path": "PupperCdkStack/PupperApi/Default/images/{image_id}/GET/Resource",
+                                "path": "PupperBackendStack/PupperApi/Default/images/{image_id}/GET/Resource",
                                 "attributes": {
                                   "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
                                   "aws:cdk:cloudformation:props": {
@@ -3185,11 +3343,11 @@
           },
           "CDKMetadata": {
             "id": "CDKMetadata",
-            "path": "PupperCdkStack/CDKMetadata",
+            "path": "PupperBackendStack/CDKMetadata",
             "children": {
               "Default": {
                 "id": "Default",
-                "path": "PupperCdkStack/CDKMetadata/Default",
+                "path": "PupperBackendStack/CDKMetadata/Default",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.CfnResource",
                   "version": "2.100.0"
@@ -3197,7 +3355,7 @@
               },
               "Condition": {
                 "id": "Condition",
-                "path": "PupperCdkStack/CDKMetadata/Condition",
+                "path": "PupperBackendStack/CDKMetadata/Condition",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.CfnCondition",
                   "version": "2.100.0"
@@ -3211,7 +3369,7 @@
           },
           "BootstrapVersion": {
             "id": "BootstrapVersion",
-            "path": "PupperCdkStack/BootstrapVersion",
+            "path": "PupperBackendStack/BootstrapVersion",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnParameter",
               "version": "2.100.0"
@@ -3219,7 +3377,1112 @@
           },
           "CheckBootstrapVersion": {
             "id": "CheckBootstrapVersion",
-            "path": "PupperCdkStack/CheckBootstrapVersion",
+            "path": "PupperBackendStack/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.100.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.100.0"
+        }
+      },
+      "PupperFrontendStack": {
+        "id": "PupperFrontendStack",
+        "path": "PupperFrontendStack",
+        "children": {
+          "PupperFrontendBucket": {
+            "id": "PupperFrontendBucket",
+            "path": "PupperFrontendStack/PupperFrontendBucket",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "PupperFrontendStack/PupperFrontendBucket/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::S3::Bucket",
+                  "aws:cdk:cloudformation:props": {
+                    "bucketName": {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "pupper-frontend-",
+                          {
+                            "Ref": "AWS::AccountId"
+                          },
+                          "-",
+                          {
+                            "Ref": "AWS::Region"
+                          }
+                        ]
+                      ]
+                    },
+                    "publicAccessBlockConfiguration": {
+                      "blockPublicAcls": false,
+                      "blockPublicPolicy": false,
+                      "ignorePublicAcls": false,
+                      "restrictPublicBuckets": false
+                    },
+                    "tags": [
+                      {
+                        "key": "aws-cdk:auto-delete-objects",
+                        "value": "true"
+                      },
+                      {
+                        "key": "aws-cdk:cr-owned:8a1637b4",
+                        "value": "true"
+                      },
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "Pupper"
+                      }
+                    ],
+                    "websiteConfiguration": {
+                      "indexDocument": "index.html",
+                      "errorDocument": "error.html"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3.CfnBucket",
+                  "version": "2.100.0"
+                }
+              },
+              "Policy": {
+                "id": "Policy",
+                "path": "PupperFrontendStack/PupperFrontendBucket/Policy",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "PupperFrontendStack/PupperFrontendBucket/Policy/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::S3::BucketPolicy",
+                      "aws:cdk:cloudformation:props": {
+                        "bucket": {
+                          "Ref": "PupperFrontendBucket2D6AF6B4"
+                        },
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "s3:GetObject",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "AWS": "*"
+                              },
+                              "Resource": {
+                                "Fn::Join": [
+                                  "",
+                                  [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "PupperFrontendBucket2D6AF6B4",
+                                        "Arn"
+                                      ]
+                                    },
+                                    "/*"
+                                  ]
+                                ]
+                              }
+                            },
+                            {
+                              "Action": [
+                                "s3:DeleteObject*",
+                                "s3:GetBucket*",
+                                "s3:List*",
+                                "s3:PutBucketPolicy"
+                              ],
+                              "Effect": "Allow",
+                              "Principal": {
+                                "AWS": {
+                                  "Fn::GetAtt": [
+                                    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+                                    "Arn"
+                                  ]
+                                }
+                              },
+                              "Resource": [
+                                {
+                                  "Fn::GetAtt": [
+                                    "PupperFrontendBucket2D6AF6B4",
+                                    "Arn"
+                                  ]
+                                },
+                                {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      {
+                                        "Fn::GetAtt": [
+                                          "PupperFrontendBucket2D6AF6B4",
+                                          "Arn"
+                                        ]
+                                      },
+                                      "/*"
+                                    ]
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "Action": [
+                                "s3:GetBucket*",
+                                "s3:GetObject*",
+                                "s3:List*"
+                              ],
+                              "Effect": "Allow",
+                              "Principal": {
+                                "CanonicalUser": {
+                                  "Fn::GetAtt": [
+                                    "PupperOAI6325E414",
+                                    "S3CanonicalUserId"
+                                  ]
+                                }
+                              },
+                              "Resource": [
+                                {
+                                  "Fn::GetAtt": [
+                                    "PupperFrontendBucket2D6AF6B4",
+                                    "Arn"
+                                  ]
+                                },
+                                {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      {
+                                        "Fn::GetAtt": [
+                                          "PupperFrontendBucket2D6AF6B4",
+                                          "Arn"
+                                        ]
+                                      },
+                                      "/*"
+                                    ]
+                                  ]
+                                }
+                              ]
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.CfnBucketPolicy",
+                      "version": "2.100.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3.BucketPolicy",
+                  "version": "2.100.0"
+                }
+              },
+              "AutoDeleteObjectsCustomResource": {
+                "id": "AutoDeleteObjectsCustomResource",
+                "path": "PupperFrontendStack/PupperFrontendBucket/AutoDeleteObjectsCustomResource",
+                "children": {
+                  "Default": {
+                    "id": "Default",
+                    "path": "PupperFrontendStack/PupperFrontendBucket/AutoDeleteObjectsCustomResource/Default",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnResource",
+                      "version": "2.100.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CustomResource",
+                  "version": "2.100.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_s3.Bucket",
+              "version": "2.100.0"
+            }
+          },
+          "Custom::S3AutoDeleteObjectsCustomResourceProvider": {
+            "id": "Custom::S3AutoDeleteObjectsCustomResourceProvider",
+            "path": "PupperFrontendStack/Custom::S3AutoDeleteObjectsCustomResourceProvider",
+            "children": {
+              "Staging": {
+                "id": "Staging",
+                "path": "PupperFrontendStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Staging",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.AssetStaging",
+                  "version": "2.100.0"
+                }
+              },
+              "Role": {
+                "id": "Role",
+                "path": "PupperFrontendStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.100.0"
+                }
+              },
+              "Handler": {
+                "id": "Handler",
+                "path": "PupperFrontendStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.100.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CustomResourceProvider",
+              "version": "2.100.0"
+            }
+          },
+          "PupperOAI": {
+            "id": "PupperOAI",
+            "path": "PupperFrontendStack/PupperOAI",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "PupperFrontendStack/PupperOAI/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+                  "aws:cdk:cloudformation:props": {
+                    "cloudFrontOriginAccessIdentityConfig": {
+                      "comment": "Origin Access Identity for Pupper Frontend"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cloudfront.CfnCloudFrontOriginAccessIdentity",
+                  "version": "2.100.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_cloudfront.OriginAccessIdentity",
+              "version": "2.100.0"
+            }
+          },
+          "PupperDistribution": {
+            "id": "PupperDistribution",
+            "path": "PupperFrontendStack/PupperDistribution",
+            "children": {
+              "Origin1": {
+                "id": "Origin1",
+                "path": "PupperFrontendStack/PupperDistribution/Origin1",
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.4.2"
+                }
+              },
+              "Origin2": {
+                "id": "Origin2",
+                "path": "PupperFrontendStack/PupperDistribution/Origin2",
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.4.2"
+                }
+              },
+              "Origin3": {
+                "id": "Origin3",
+                "path": "PupperFrontendStack/PupperDistribution/Origin3",
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.4.2"
+                }
+              },
+              "Origin4": {
+                "id": "Origin4",
+                "path": "PupperFrontendStack/PupperDistribution/Origin4",
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.4.2"
+                }
+              },
+              "Origin5": {
+                "id": "Origin5",
+                "path": "PupperFrontendStack/PupperDistribution/Origin5",
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.4.2"
+                }
+              },
+              "Origin6": {
+                "id": "Origin6",
+                "path": "PupperFrontendStack/PupperDistribution/Origin6",
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.4.2"
+                }
+              },
+              "Origin7": {
+                "id": "Origin7",
+                "path": "PupperFrontendStack/PupperDistribution/Origin7",
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.4.2"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "PupperFrontendStack/PupperDistribution/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CloudFront::Distribution",
+                  "aws:cdk:cloudformation:props": {
+                    "distributionConfig": {
+                      "enabled": true,
+                      "origins": [
+                        {
+                          "domainName": {
+                            "Fn::Select": [
+                              2,
+                              {
+                                "Fn::Split": [
+                                  "/",
+                                  {
+                                    "Fn::GetAtt": [
+                                      "PupperFrontendBucket2D6AF6B4",
+                                      "WebsiteURL"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          "id": "PupperFrontendStackPupperDistributionOrigin10B34E274",
+                          "customOriginConfig": {
+                            "originSslProtocols": [
+                              "TLSv1.2"
+                            ],
+                            "originProtocolPolicy": "http-only"
+                          }
+                        },
+                        {
+                          "domainName": {
+                            "Fn::Select": [
+                              2,
+                              {
+                                "Fn::Split": [
+                                  "/",
+                                  {
+                                    "Fn::GetAtt": [
+                                      "PupperFrontendBucket2D6AF6B4",
+                                      "WebsiteURL"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          "id": "PupperFrontendStackPupperDistributionOrigin258D7F578",
+                          "customOriginConfig": {
+                            "originSslProtocols": [
+                              "TLSv1.2"
+                            ],
+                            "originProtocolPolicy": "http-only"
+                          }
+                        },
+                        {
+                          "domainName": {
+                            "Fn::Select": [
+                              2,
+                              {
+                                "Fn::Split": [
+                                  "/",
+                                  {
+                                    "Fn::GetAtt": [
+                                      "PupperFrontendBucket2D6AF6B4",
+                                      "WebsiteURL"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          "id": "PupperFrontendStackPupperDistributionOrigin31077883D",
+                          "customOriginConfig": {
+                            "originSslProtocols": [
+                              "TLSv1.2"
+                            ],
+                            "originProtocolPolicy": "http-only"
+                          }
+                        },
+                        {
+                          "domainName": {
+                            "Fn::Select": [
+                              2,
+                              {
+                                "Fn::Split": [
+                                  "/",
+                                  {
+                                    "Fn::GetAtt": [
+                                      "PupperFrontendBucket2D6AF6B4",
+                                      "WebsiteURL"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          "id": "PupperFrontendStackPupperDistributionOrigin4B7C06045",
+                          "customOriginConfig": {
+                            "originSslProtocols": [
+                              "TLSv1.2"
+                            ],
+                            "originProtocolPolicy": "http-only"
+                          }
+                        },
+                        {
+                          "domainName": {
+                            "Fn::Select": [
+                              2,
+                              {
+                                "Fn::Split": [
+                                  "/",
+                                  {
+                                    "Fn::GetAtt": [
+                                      "PupperFrontendBucket2D6AF6B4",
+                                      "WebsiteURL"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          "id": "PupperFrontendStackPupperDistributionOrigin54F5AF71E",
+                          "customOriginConfig": {
+                            "originSslProtocols": [
+                              "TLSv1.2"
+                            ],
+                            "originProtocolPolicy": "http-only"
+                          }
+                        },
+                        {
+                          "domainName": {
+                            "Fn::Select": [
+                              2,
+                              {
+                                "Fn::Split": [
+                                  "/",
+                                  {
+                                    "Fn::GetAtt": [
+                                      "PupperFrontendBucket2D6AF6B4",
+                                      "WebsiteURL"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          "id": "PupperFrontendStackPupperDistributionOrigin64B4EE22C",
+                          "customOriginConfig": {
+                            "originSslProtocols": [
+                              "TLSv1.2"
+                            ],
+                            "originProtocolPolicy": "http-only"
+                          }
+                        },
+                        {
+                          "domainName": {
+                            "Fn::Select": [
+                              2,
+                              {
+                                "Fn::Split": [
+                                  "/",
+                                  {
+                                    "Fn::GetAtt": [
+                                      "PupperFrontendBucket2D6AF6B4",
+                                      "WebsiteURL"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          "id": "PupperFrontendStackPupperDistributionOrigin70C5F9F01",
+                          "customOriginConfig": {
+                            "originSslProtocols": [
+                              "TLSv1.2"
+                            ],
+                            "originProtocolPolicy": "http-only"
+                          }
+                        }
+                      ],
+                      "defaultCacheBehavior": {
+                        "pathPattern": "*",
+                        "targetOriginId": "PupperFrontendStackPupperDistributionOrigin10B34E274",
+                        "allowedMethods": [
+                          "GET",
+                          "HEAD",
+                          "OPTIONS"
+                        ],
+                        "cachedMethods": [
+                          "GET",
+                          "HEAD",
+                          "OPTIONS"
+                        ],
+                        "cachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+                        "compress": true,
+                        "originRequestPolicyId": "88a5eaf4-2fd4-4709-b370-b4c650ea3fcf",
+                        "viewerProtocolPolicy": "redirect-to-https"
+                      },
+                      "cacheBehaviors": [
+                        {
+                          "pathPattern": "/static/*",
+                          "targetOriginId": "PupperFrontendStackPupperDistributionOrigin258D7F578",
+                          "cachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+                          "compress": true,
+                          "originRequestPolicyId": "88a5eaf4-2fd4-4709-b370-b4c650ea3fcf",
+                          "viewerProtocolPolicy": "redirect-to-https"
+                        },
+                        {
+                          "pathPattern": "*.jpg",
+                          "targetOriginId": "PupperFrontendStackPupperDistributionOrigin31077883D",
+                          "cachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+                          "compress": true,
+                          "viewerProtocolPolicy": "redirect-to-https"
+                        },
+                        {
+                          "pathPattern": "*.png",
+                          "targetOriginId": "PupperFrontendStackPupperDistributionOrigin4B7C06045",
+                          "cachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+                          "compress": true,
+                          "viewerProtocolPolicy": "redirect-to-https"
+                        },
+                        {
+                          "pathPattern": "*.svg",
+                          "targetOriginId": "PupperFrontendStackPupperDistributionOrigin54F5AF71E",
+                          "cachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+                          "compress": true,
+                          "viewerProtocolPolicy": "redirect-to-https"
+                        },
+                        {
+                          "pathPattern": "*.css",
+                          "targetOriginId": "PupperFrontendStackPupperDistributionOrigin64B4EE22C",
+                          "cachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+                          "compress": true,
+                          "viewerProtocolPolicy": "redirect-to-https"
+                        },
+                        {
+                          "pathPattern": "*.js",
+                          "targetOriginId": "PupperFrontendStackPupperDistributionOrigin70C5F9F01",
+                          "cachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+                          "compress": true,
+                          "viewerProtocolPolicy": "redirect-to-https"
+                        }
+                      ],
+                      "comment": "Pupper Dog Adoption App Frontend Distribution",
+                      "customErrorResponses": [
+                        {
+                          "errorCachingMinTtl": 1800,
+                          "errorCode": 404,
+                          "responseCode": 200,
+                          "responsePagePath": "/index.html"
+                        },
+                        {
+                          "errorCachingMinTtl": 1800,
+                          "errorCode": 403,
+                          "responseCode": 200,
+                          "responsePagePath": "/index.html"
+                        }
+                      ],
+                      "defaultRootObject": "index.html",
+                      "httpVersion": "http2",
+                      "ipv6Enabled": true,
+                      "priceClass": "PriceClass_100"
+                    },
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "Pupper"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cloudfront.CfnDistribution",
+                  "version": "2.100.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_cloudfront.Distribution",
+              "version": "2.100.0"
+            }
+          },
+          "PupperFrontendDeployment": {
+            "id": "PupperFrontendDeployment",
+            "path": "PupperFrontendStack/PupperFrontendDeployment",
+            "children": {
+              "AwsCliLayer": {
+                "id": "AwsCliLayer",
+                "path": "PupperFrontendStack/PupperFrontendDeployment/AwsCliLayer",
+                "children": {
+                  "Code": {
+                    "id": "Code",
+                    "path": "PupperFrontendStack/PupperFrontendDeployment/AwsCliLayer/Code",
+                    "children": {
+                      "Stage": {
+                        "id": "Stage",
+                        "path": "PupperFrontendStack/PupperFrontendDeployment/AwsCliLayer/Code/Stage",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.AssetStaging",
+                          "version": "2.100.0"
+                        }
+                      },
+                      "AssetBucket": {
+                        "id": "AssetBucket",
+                        "path": "PupperFrontendStack/PupperFrontendDeployment/AwsCliLayer/Code/AssetBucket",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                          "version": "2.100.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                      "version": "2.100.0"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "PupperFrontendStack/PupperFrontendDeployment/AwsCliLayer/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::LayerVersion",
+                      "aws:cdk:cloudformation:props": {
+                        "content": {
+                          "s3Bucket": {
+                            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+                          },
+                          "s3Key": "2e8ea9d657c30715826b809f41d1f2482ff4e16f37385f55fbcf7d8ccfdd14db.zip"
+                        },
+                        "description": "/opt/awscli/aws"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnLayerVersion",
+                      "version": "2.100.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.lambda_layer_awscli.AwsCliLayer",
+                  "version": "2.100.0"
+                }
+              },
+              "CustomResourceHandler": {
+                "id": "CustomResourceHandler",
+                "path": "PupperFrontendStack/PupperFrontendDeployment/CustomResourceHandler",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.SingletonFunction",
+                  "version": "2.100.0"
+                }
+              },
+              "Asset1": {
+                "id": "Asset1",
+                "path": "PupperFrontendStack/PupperFrontendDeployment/Asset1",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "PupperFrontendStack/PupperFrontendDeployment/Asset1/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.100.0"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "PupperFrontendStack/PupperFrontendDeployment/Asset1/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.100.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.100.0"
+                }
+              },
+              "CustomResource": {
+                "id": "CustomResource",
+                "path": "PupperFrontendStack/PupperFrontendDeployment/CustomResource",
+                "children": {
+                  "Default": {
+                    "id": "Default",
+                    "path": "PupperFrontendStack/PupperFrontendDeployment/CustomResource/Default",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnResource",
+                      "version": "2.100.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CustomResource",
+                  "version": "2.100.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_s3_deployment.BucketDeployment",
+              "version": "2.100.0"
+            }
+          },
+          "Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C": {
+            "id": "Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C",
+            "path": "PupperFrontendStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C",
+            "children": {
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "PupperFrontendStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole",
+                "children": {
+                  "ImportServiceRole": {
+                    "id": "ImportServiceRole",
+                    "path": "PupperFrontendStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/ImportServiceRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.100.0"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "PupperFrontendStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          }
+                        ],
+                        "tags": [
+                          {
+                            "key": "Environment",
+                            "value": "Production"
+                          },
+                          {
+                            "key": "Project",
+                            "value": "Pupper"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.100.0"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "PupperFrontendStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "PupperFrontendStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "s3:GetBucket*",
+                                    "s3:GetObject*",
+                                    "s3:List*"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          "arn:",
+                                          {
+                                            "Ref": "AWS::Partition"
+                                          },
+                                          ":s3:::",
+                                          {
+                                            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+                                          },
+                                          "/*"
+                                        ]
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          "arn:",
+                                          {
+                                            "Ref": "AWS::Partition"
+                                          },
+                                          ":s3:::",
+                                          {
+                                            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+                                          }
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "Action": [
+                                    "s3:Abort*",
+                                    "s3:DeleteObject*",
+                                    "s3:GetBucket*",
+                                    "s3:GetObject*",
+                                    "s3:List*",
+                                    "s3:PutObject",
+                                    "s3:PutObjectLegalHold",
+                                    "s3:PutObjectRetention",
+                                    "s3:PutObjectTagging",
+                                    "s3:PutObjectVersionTagging"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "PupperFrontendBucket2D6AF6B4",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          {
+                                            "Fn::GetAtt": [
+                                              "PupperFrontendBucket2D6AF6B4",
+                                              "Arn"
+                                            ]
+                                          },
+                                          "/*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "Action": [
+                                    "cloudfront:CreateInvalidation",
+                                    "cloudfront:GetInvalidation"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": "*"
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF",
+                            "roles": [
+                              {
+                                "Ref": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.100.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.100.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.100.0"
+                }
+              },
+              "Code": {
+                "id": "Code",
+                "path": "PupperFrontendStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "PupperFrontendStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.100.0"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "PupperFrontendStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.100.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.100.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "PupperFrontendStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": {
+                        "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+                      },
+                      "s3Key": "9eb41a5505d37607ac419321497a4f8c21cf0ee1f9b4a6b29aa04301aea5c7fd.zip"
+                    },
+                    "environment": {
+                      "variables": {
+                        "AWS_CA_BUNDLE": "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"
+                      }
+                    },
+                    "handler": "index.handler",
+                    "layers": [
+                      {
+                        "Ref": "PupperFrontendDeploymentAwsCliLayerAFC6DE14"
+                      }
+                    ],
+                    "role": {
+                      "Fn::GetAtt": [
+                        "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265",
+                        "Arn"
+                      ]
+                    },
+                    "runtime": "python3.9",
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "Production"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "Pupper"
+                      }
+                    ],
+                    "timeout": 900
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.100.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "version": "2.100.0"
+            }
+          },
+          "FrontendBucketName": {
+            "id": "FrontendBucketName",
+            "path": "PupperFrontendStack/FrontendBucketName",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.100.0"
+            }
+          },
+          "FrontendBucketWebsiteURL": {
+            "id": "FrontendBucketWebsiteURL",
+            "path": "PupperFrontendStack/FrontendBucketWebsiteURL",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.100.0"
+            }
+          },
+          "CloudFrontDistributionId": {
+            "id": "CloudFrontDistributionId",
+            "path": "PupperFrontendStack/CloudFrontDistributionId",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.100.0"
+            }
+          },
+          "CloudFrontDistributionDomainName": {
+            "id": "CloudFrontDistributionDomainName",
+            "path": "PupperFrontendStack/CloudFrontDistributionDomainName",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.100.0"
+            }
+          },
+          "CloudFrontURL": {
+            "id": "CloudFrontURL",
+            "path": "PupperFrontendStack/CloudFrontURL",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.100.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "PupperFrontendStack/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "PupperFrontendStack/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.100.0"
+                }
+              },
+              "Condition": {
+                "id": "Condition",
+                "path": "PupperFrontendStack/CDKMetadata/Condition",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnCondition",
+                  "version": "2.100.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.4.2"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "PupperFrontendStack/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.100.0"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "PupperFrontendStack/CheckBootstrapVersion",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnRule",
               "version": "2.100.0"
